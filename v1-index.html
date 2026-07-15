@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>document.documentElement.classList.add('js')</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Whole Instrument · Foster's studio, seen whole</title>
+<meta name="description" content="For Foster, from Gordon. The forty-some machines are not a collection. They are one instrument, one room, one signal path, played by one hand. A tour, a signal flow, and what would be possible in there.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  /* warm residential palette, adjacent to Foster's room */
+  --paper:#f3ecdb;        /* warm cream ground */
+  --paper2:#efe6d1;       /* slightly deeper cream */
+  --ink:#232a20;          /* deep green-black text */
+  --ink-soft:#41493b;
+  --muted:#6a7160;        /* sage-gray */
+  --forest:#243c2c;       /* deep forest green */
+  --sage:#5c7a60;         /* mid sage */
+  --sage-soft:#8aa189;
+  --brass:#a97f38;        /* brass */
+  --brass-lt:#c6a15a;
+  --coral:#d15a41;        /* the pop accent (Bebe Cherie / pink alcove kin) */
+  --mint:#5fb894;         /* Lyra-8 mint, secondary pop */
+  --line:rgba(36,42,32,0.14);
+  --line-soft:rgba(36,42,32,0.08);
+  --card:#faf5e9;
+  --shadow:0 22px 50px -30px rgba(30,40,26,0.55);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:"Inter",system-ui,sans-serif;line-height:1.62;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+a{color:var(--forest);text-decoration:none}
+:focus-visible{outline:2.5px solid var(--coral);outline-offset:3px;border-radius:3px}
+.wrap{width:min(1120px,92vw);margin:0 auto}
+.narrow{width:min(720px,92vw);margin:0 auto}
+.serif{font-family:"Fraunces",Georgia,serif}
+.mono{font-family:"Space Mono",ui-monospace,monospace}
+.pop{color:var(--coral)}
+.brass{color:var(--brass)}
+
+/* faint paper grain + sage stripe washes */
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")}
+
+/* ===== TOP NAV ===== */
+.topbar{position:sticky;top:0;z-index:60;background:rgba(243,236,219,0.86);backdrop-filter:blur(9px);border-bottom:1px solid var(--line-soft)}
+.topbar .row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
+.brandmark{display:flex;align-items:center;gap:11px;font-family:"Fraunces",serif;font-weight:700;font-size:16px;color:var(--forest);letter-spacing:-0.01em}
+.brandmark svg{width:26px;height:26px;flex:0 0 auto}
+.navlinks{display:flex;gap:20px;flex-wrap:wrap}
+.navlinks a{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);transition:color .2s;white-space:nowrap}
+.navlinks a:hover{color:var(--coral)}
+@media(max-width:760px){.navlinks{display:none}}
+
+/* ===== HERO ===== */
+.hero{position:relative;z-index:2;padding:clamp(56px,10vw,120px) 0 clamp(50px,7vw,86px);overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0.5;
+  background:repeating-linear-gradient(90deg,transparent 0 38px,rgba(92,122,96,0.06) 38px 76px)}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:180px;z-index:0;pointer-events:none;
+  background:linear-gradient(180deg,transparent,var(--paper))}
+.hero .wrap{position:relative;z-index:2}
+.kick{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:0.26em;text-transform:uppercase;color:var(--brass)}
+h1.htitle{font-family:"Fraunces",serif;font-weight:900;letter-spacing:-0.025em;line-height:0.92;
+  font-size:clamp(52px,11vw,128px);margin:16px 0 0;color:var(--forest)}
+h1.htitle .em{font-style:italic;font-weight:600;color:var(--coral);display:inline-block}
+.subhead{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:clamp(19px,2.6vw,30px);color:var(--ink-soft);margin-top:20px;max-width:22ch;line-height:1.28}
+.lede{max-width:60ch;margin-top:26px;font-size:clamp(16px,1.4vw,18.5px);color:var(--ink-soft)}
+.lede b{color:var(--forest);font-weight:600}
+.herometa{margin-top:34px;display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.hm{border-left:2px solid var(--brass);padding-left:14px}
+.hm .n{font-family:"Fraunces",serif;font-weight:700;font-size:clamp(26px,3.4vw,38px);color:var(--forest);line-height:1}
+.hm .l{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:7px;max-width:20ch}
+
+/* ===== SECTION SCAFFOLD ===== */
+section.band{position:relative;z-index:2;padding:clamp(58px,8vw,104px) 0}
+.band.tint{background:var(--paper2)}
+.band.forest{background:var(--forest);color:var(--paper)}
+.eyebrow{font-family:"Space Mono",monospace;font-size:11.5px;letter-spacing:0.2em;text-transform:uppercase;color:var(--brass);
+  display:flex;align-items:center;gap:13px}
+.eyebrow .num{font-weight:700}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--line);max-width:120px}
+.band.forest .eyebrow{color:var(--brass-lt)}
+.band.forest .eyebrow::after{background:rgba(255,255,255,0.18)}
+h2.sect{font-family:"Fraunces",serif;font-weight:700;letter-spacing:-0.02em;line-height:1.0;
+  font-size:clamp(32px,5.2vw,62px);margin:16px 0 0;color:var(--forest)}
+.band.forest h2.sect{color:var(--paper)}
+.sect .em{font-style:italic;font-weight:500;color:var(--coral)}
+.band.forest .sect .em{color:var(--brass-lt)}
+p.intro{max-width:64ch;margin-top:20px;font-size:clamp(16px,1.3vw,18px);color:var(--ink-soft)}
+.band.forest p.intro{color:rgba(243,236,219,0.82)}
+p.intro b{color:var(--forest);font-weight:600}
+.band.forest p.intro b{color:var(--paper)}
+
+/* ===== GROUP CARDS (section 1) ===== */
+.groups{margin-top:clamp(34px,5vw,52px);display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.group{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px 28px 26px;position:relative;overflow:hidden;
+  box-shadow:var(--shadow);transition:transform .25s ease,box-shadow .25s ease}
+.group:hover{transform:translateY(-4px);box-shadow:0 30px 60px -30px rgba(30,40,26,0.6)}
+.group::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--rolec,var(--sage))}
+.group.big{grid-column:1 / -1}
+.roletag{display:inline-flex;align-items:center;gap:9px;font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--rolec,var(--sage));font-weight:700}
+.roletag .dot{width:9px;height:9px;border-radius:50%;background:var(--rolec,var(--sage))}
+.group h3{font-family:"Fraunces",serif;font-weight:700;font-size:clamp(21px,2.4vw,27px);margin:11px 0 0;color:var(--forest);line-height:1.08}
+.group .why{font-size:14.5px;color:var(--ink-soft);margin-top:11px;max-width:52ch}
+.pieces{margin-top:18px;border-top:1px solid var(--line-soft)}
+.piece{display:grid;grid-template-columns:1fr;gap:2px;padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.piece:last-child{border-bottom:0}
+.piece .pn{font-weight:600;font-size:14.5px;color:var(--ink)}
+.piece .pn .maker{color:var(--muted);font-weight:500}
+.piece .pd{font-size:13px;color:var(--muted);line-height:1.5}
+.modgrid{margin-top:14px;display:flex;flex-wrap:wrap;gap:7px}
+.modgrid span{font-family:"Space Mono",monospace;font-size:11px;color:var(--forest);background:rgba(92,122,96,0.12);border:1px solid var(--line-soft);
+  border-radius:7px;padding:4px 9px;letter-spacing:0.01em}
+
+/* two tells callout */
+.tells{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.tell{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 26px;box-shadow:var(--shadow);position:relative}
+.tell .tk{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--coral);font-weight:700}
+.tell h4{font-family:"Fraunces",serif;font-weight:700;font-size:22px;color:var(--forest);margin:9px 0 8px}
+.tell p{font-size:14.5px;color:var(--ink-soft)}
+.tell .items{margin-top:13px;display:flex;flex-wrap:wrap;gap:7px}
+.tell .items span{font-family:"Space Mono",monospace;font-size:11px;color:var(--ink-soft);border:1px solid var(--line);border-radius:7px;padding:4px 9px}
+
+/* ===== SIGNAL FLOW (section 2) ===== */
+.flow{margin-top:clamp(34px,5vw,52px)}
+.flowgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:stretch}
+.stage{position:relative;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.16);border-radius:16px;padding:22px 20px}
+.stage .sh{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--brass-lt)}
+.stage h4{font-family:"Fraunces",serif;font-weight:600;font-size:20px;color:var(--paper);margin:8px 0 3px}
+.stage .sd{font-size:13px;color:rgba(243,236,219,0.7)}
+.stage ul{list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.stage li{font-size:13px;color:rgba(243,236,219,0.9);padding-left:16px;position:relative}
+.stage li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--stagec,var(--mint))}
+.stage.s1{--stagec:var(--mint)}
+.stage.s2{--stagec:var(--brass-lt)}
+.stage.s3{--stagec:var(--coral)}
+.stage.s4{--stagec:var(--paper)}
+.stage .arrow{position:absolute;right:-14px;top:50%;transform:translateY(-50%);z-index:3;color:var(--brass-lt);font-size:22px;line-height:1}
+.stage:last-child .arrow{display:none}
+.flownote{margin-top:22px;font-size:14.5px;color:rgba(243,236,219,0.78);max-width:70ch}
+.flownote b{color:var(--paper);font-weight:600}
+/* clock rail */
+.clockrail{margin-top:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-family:"Space Mono",monospace;font-size:11.5px;
+  letter-spacing:0.06em;color:var(--brass-lt);border:1px dashed rgba(255,255,255,0.22);border-radius:12px;padding:14px 18px}
+.clockrail .pulse{width:10px;height:10px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 0 rgba(95,184,148,0.7);animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(95,184,148,0.6)}70%{box-shadow:0 0 0 12px rgba(95,184,148,0)}100%{box-shadow:0 0 0 0 rgba(95,184,148,0)}}
+
+/* ===== POSSIBLE (section 3) ===== */
+.props{margin-top:clamp(34px,5vw,52px);display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.prop{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 24px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+  display:flex;flex-direction:column;transition:transform .25s ease}
+.prop:hover{transform:translateY(-4px)}
+.prop .idx{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:0.14em;color:var(--brass);font-weight:700}
+.prop h3{font-family:"Fraunces",serif;font-weight:700;font-size:22px;color:var(--forest);margin:8px 0 0;line-height:1.1}
+.prop .role{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:14.5px;color:var(--coral);margin-top:4px}
+.prop p{font-size:14px;color:var(--ink-soft);margin-top:12px;flex:1}
+.prop .chain{margin-top:15px;display:flex;flex-wrap:wrap;gap:6px}
+.prop .chain span{font-family:"Space Mono",monospace;font-size:10.5px;color:var(--forest);background:rgba(169,127,56,0.1);border:1px solid rgba(169,127,56,0.24);
+  border-radius:6px;padding:3px 8px}
+
+/* ===== MISSING (section 4) ===== */
+.missing{margin-top:clamp(30px,4vw,44px);display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.miss{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow)}
+.miss .mtag{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;
+  padding:3px 8px;border-radius:6px;display:inline-block}
+.miss .mtag.prop{color:var(--coral);background:rgba(209,90,65,0.12);border:1px solid rgba(209,90,65,0.28)}
+.miss .mtag.open{color:var(--sage);background:rgba(92,122,96,0.14);border:1px solid rgba(92,122,96,0.3)}
+.miss .mtag.fine{color:var(--brass);background:rgba(169,127,56,0.12);border:1px solid rgba(169,127,56,0.28)}
+.miss h4{font-family:"Fraunces",serif;font-weight:700;font-size:19px;color:var(--forest);margin:11px 0 6px}
+.miss p{font-size:14px;color:var(--ink-soft)}
+
+/* marble mantel closer block */
+.mantel{margin-top:clamp(30px,4vw,44px);border-radius:20px;overflow:hidden;position:relative;box-shadow:var(--shadow);
+  background:
+    radial-gradient(120% 90% at 15% 0,rgba(255,255,255,0.7),transparent 55%),
+    linear-gradient(115deg,#efe9df,#e6ded0 40%,#f1ebe1 70%,#e4dccd);
+  border:1px solid var(--line)}
+.mantel::before{content:"";position:absolute;inset:0;opacity:0.5;mix-blend-mode:multiply;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Cg stroke='%23b7ab97' stroke-width='0.8' fill='none' opacity='0.5'%3E%3Cpath d='M-20 60 q120 40 220 10 t240 -20'/%3E%3Cpath d='M-20 150 q140 -30 260 20 t220 -10'/%3E%3Cpath d='M-20 230 q100 50 240 5 t260 15'/%3E%3C/g%3E%3C/svg%3E")}
+.mantel .inr{position:relative;z-index:2;padding:clamp(30px,5vw,52px)}
+.mantel .mk{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--brass)}
+.mantel h3{font-family:"Fraunces",serif;font-weight:700;font-size:clamp(24px,3.4vw,36px);color:var(--forest);margin:10px 0 0;max-width:20ch;line-height:1.08}
+.mantel p{font-size:15px;color:var(--ink-soft);margin-top:14px;max-width:60ch}
+
+/* ===== LOVE LETTER (section 5) ===== */
+.letter{background:radial-gradient(90% 70% at 50% 0,rgba(169,127,56,0.1),transparent 60%),var(--paper2)}
+.love{margin:clamp(30px,5vw,46px) auto 0;max-width:720px;border:1px solid var(--line);border-radius:20px;
+  background:linear-gradient(180deg,var(--card),#f7f0e2);padding:clamp(30px,5vw,56px);box-shadow:var(--shadow);position:relative}
+.love::before{content:"";position:absolute;left:26px;right:26px;top:20px;height:3px;
+  background:repeating-linear-gradient(90deg,var(--brass) 0 14px,transparent 14px 26px);opacity:0.5}
+.love .from{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--brass);margin-top:8px}
+.love p{font-family:"Fraunces",serif;font-weight:400;font-size:clamp(17px,1.9vw,21px);line-height:1.62;color:var(--ink);margin-top:18px}
+.love p.lead{font-size:clamp(20px,2.4vw,26px);font-weight:500;color:var(--forest);line-height:1.4}
+.love p .i{font-style:italic;color:var(--coral)}
+.love .sig{font-family:"Fraunces",serif;font-style:italic;font-weight:600;font-size:23px;color:var(--brass);margin-top:26px}
+.love .sig small{display:block;font-family:"Space Mono",monospace;font-style:normal;font-size:10.5px;letter-spacing:0.16em;
+  text-transform:uppercase;color:var(--muted);margin-top:8px}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;position:relative;z-index:2}
+footer p{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:0.08em;color:var(--muted)}
+footer .crest{width:34px;height:34px;margin:0 auto 12px}
+
+/* reveals */
+.js .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.js .reveal.in{opacity:1;transform:none}
+.js .reveal.d1{transition-delay:.08s}.js .reveal.d2{transition-delay:.16s}.js .reveal.d3{transition-delay:.24s}
+@media(prefers-reduced-motion:reduce){
+  .js .reveal{opacity:1;transform:none}
+  .clockrail .pulse{animation:none}
+}
+
+/* responsive */
+@media(max-width:900px){
+  .groups{grid-template-columns:1fr}
+  .tells{grid-template-columns:1fr}
+  .flowgrid{grid-template-columns:1fr 1fr}
+  .stage .arrow{display:none}
+  .props{grid-template-columns:1fr 1fr}
+  .missing{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .flowgrid{grid-template-columns:1fr}
+  .props{grid-template-columns:1fr}
+  .herometa{gap:20px}
+}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ===== TOP NAV ===== -->
+<nav class="topbar" aria-label="Section navigation">
+  <div class="wrap row">
+    <a class="brandmark" href="#top" aria-label="The Whole Instrument, top of page">
+      <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <ellipse cx="20" cy="25" rx="14" ry="10" fill="#5fb894"/>
+        <ellipse cx="20" cy="23" rx="14" ry="10" fill="#79c6a4"/>
+        <circle cx="13" cy="19" r="4.4" fill="#79c6a4"/><circle cx="27" cy="19" r="4.4" fill="#79c6a4"/>
+        <circle cx="13" cy="19.5" r="1.9" fill="#243c2c"/><circle cx="27" cy="19.5" r="1.9" fill="#243c2c"/>
+        <path d="M12 28 Q20 33 28 28" stroke="#243c2c" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <path d="M20 3 L20 15" stroke="#a97f38" stroke-width="2" stroke-linecap="round"/>
+        <path d="M20 3 l-3 5 M20 3 l3 5" stroke="#a97f38" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </svg>
+      The Whole Instrument
+    </a>
+    <div class="navlinks">
+      <a href="#assembled">The collection</a>
+      <a href="#room">The room</a>
+      <a href="#possible">What's possible</a>
+      <a href="#next">What's next</a>
+      <a href="#love">Seen with love</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="kick">For Foster · from Gordon · on finally seeing the room</div>
+    <h1 class="htitle">The Whole<br><span class="em">Instrument.</span></h1>
+    <p class="subhead">Forty-some machines. One room. One hand.</p>
+    <p class="lede">You sent me twenty pictures and called it a collection. It is not a collection. A collection is a shelf of things that happen to be near each other. <b>What you have built is one instrument</b>, with an analog keybed and a modular voice and a soldering iron and a jazz-theory shelf, all wired toward the same two feet of desk. I want to walk it with you the way it deserves to be walked. As a room, not a shopping list.</p>
+    <div class="herometa">
+      <div class="hm reveal"><div class="n">3</div><div class="l">flagship polysynths, all current generation</div></div>
+      <div class="hm reveal d1"><div class="n">40+</div><div class="l">machines and modules, one signal path</div></div>
+      <div class="hm reveal d2"><div class="n">1</div><div class="l">SSL master chain that finishes everything</div></div>
+      <div class="hm reveal d3"><div class="n">1</div><div class="l">Tektronix bench, because you build them too</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== SECTION 1 · WHAT FOSTER HAS ASSEMBLED ===== -->
+<section class="band" id="assembled">
+  <div class="wrap">
+    <div class="eyebrow reveal"><span class="num">01</span> What you have assembled</div>
+    <h2 class="sect reveal">Seven jobs, <span class="em">one studio.</span></h2>
+    <p class="intro reveal">Read the room by what each group is <b>for</b>, and the whole thing stops looking like gear acquisition and starts looking like a plan. Performance keyboards you play and sing on. Experimental voices you sculpt with. A rhythm section for the floor. A modular playground that plays itself. A mastering chain that finishes records. A bench where you fix and build. And a bookshelf that tells me you study form, not just buy it. None of it is casual. All of it belongs.</p>
+
+    <div class="groups">
+
+      <div class="group big reveal" style="--rolec:var(--coral)">
+        <span class="roletag"><span class="dot"></span>Performance keyboards · the three-flagship stack</span>
+        <h3>The front of the room, where you play and sing.</h3>
+        <p class="why">Three flagship polysynths, all released in the last two years, is not redundancy. It is three different ways to put your hands on sound: analog warmth, hybrid texture, and expressive pitch that moves under your fingers. Stack them and you have a performance instrument no single keyboard can be.</p>
+        <div class="pieces">
+          <div class="piece"><div class="pn">Moog Muse <span class="maker">· 8-voice analog, 61 keys</span></div><div class="pd">Moog's first true polysynth since the Memorymoog. This is the warm heart of the stack, the voice that sings on top of everything.</div></div>
+          <div class="piece"><div class="pn">Waldorf Quantum MK2 <span class="maker">· hybrid, 61 keys</span></div><div class="pd">Wavetable, particle, kernel, resonator, analog filter. The texture engine. Where you go when a sound has to feel like weather.</div></div>
+          <div class="piece"><div class="pn">Expressive E Osmose 49 <span class="maker">· MPE, Haken EaganMatrix</span></div><div class="pd">A poly-aftertouch keybed that bends and breathes per note. This is the expression instrument, the one that plays like a cello section.</div></div>
+        </div>
+      </div>
+
+      <div class="group reveal" style="--rolec:var(--mint)">
+        <span class="roletag"><span class="dot"></span>Sound design · experimental voices</span>
+        <h3>The instruments that make non-song music.</h3>
+        <p class="why">These are not for melodies. They are for dread, drone, breath, and grit. The texture layer under a score, or the whole point of an ambient piece.</p>
+        <div class="pieces">
+          <div class="piece"><div class="pn">SOMA Lyra-8 <span class="maker">· organismic synth</span></div><div class="pd">Eight voices that fight each other into a living drone. A cult instrument for exactly one thing, done better than anything else.</div></div>
+          <div class="piece"><div class="pn">Moog Spectravox <span class="maker">· 10-band vocoder / spectral</span></div><div class="pd">Lives on the marble mantel. A whole spectral FX chain in a Mother-32 footprint.</div></div>
+          <div class="piece"><div class="pn">Erica Synths Pērkons HD-01 <span class="maker">· 4-voice hybrid</span></div><div class="pd">A drum machine that thinks it is a synth. The Latvian menace at the edge of rhythm and noise.</div></div>
+          <div class="piece"><div class="pn">Erica Synths SteamPipe <span class="maker">· physical modeling</span></div><div class="pd">Built with 112dB. Breath and pipe, an acoustic voice that no wavetable can fake.</div></div>
+          <div class="piece"><div class="pn">Elektron Digitone II <span class="maker">· FM groovebox</span></div><div class="pd">The sequencer-brain that can also make cold, glassy FM. A workstation hiding as a box.</div></div>
+        </div>
+      </div>
+
+      <div class="group reveal d1" style="--rolec:var(--brass)">
+        <span class="roletag"><span class="dot"></span>Groove · the rhythm section</span>
+        <h3>Everything the floor is made of.</h3>
+        <p class="why">Four boxes that cover the entire lineage of dance rhythm: the 808, the 303, a modern Roland, and a boutique acid bass. This is the engine room for the bass music you are teaching yourself right now.</p>
+        <div class="pieces">
+          <div class="piece"><div class="pn">Behringer RD-8 <span class="maker">· 808 clone, full size</span></div><div class="pd">The kick and clap that every low-end record is built on.</div></div>
+          <div class="piece"><div class="pn">Behringer TD-3-MO <span class="maker">· 303, Devilfish-modded</span></div><div class="pd">Acid, with the modifications that make it scream. The squelch you cannot get any other way.</div></div>
+          <div class="piece"><div class="pn">Roland TR-6S <span class="maker">· modern Rhythm Composer</span></div><div class="pd">The compact modern brain when you want clean sampled drums fast.</div></div>
+          <div class="piece"><div class="pn">Erica Synths Bassline DB-01 <span class="maker">· analog acid bass</span></div><div class="pd">A second, fatter acid line so the low end has two voices arguing.</div></div>
+        </div>
+      </div>
+
+      <div class="group big reveal" style="--rolec:var(--sage)">
+        <span class="roletag"><span class="dot"></span>Modular · the playground that plays itself</span>
+        <h3>A generative instrument, plus a whole second Doepfer rack behind it.</h3>
+        <p class="why">This is the part most people never get to. A boutique two-row case full of the best small-format modules made, backed by a full Doepfer A-100 system for utility. Between Marbles for controlled randomness and Pam's for clock, this rig can compose without you. You set the rules, it plays the piece. And the ES-9 means all of it talks to the Mac Mini as cleanly as a plugin.</p>
+        <div class="modgrid">
+          <span>Mutable Marbles · random</span><span>Mutable Elements · modal</span><span>Mutable Beads · granular</span>
+          <span>Mutable µTides · function</span><span>ALM Pamela's PRO · clock</span><span>ALM Pamela's Workout</span>
+          <span>Make Noise Maths</span><span>Intellijel Quadrax</span><span>Intellijel Starlab · reverb</span>
+          <span>After Later Beehive · Plaits</span><span>After Later µBurst / Peaks+</span><span>Bastl Ultra-Kick</span>
+          <span>Dreadbox Hades · voice</span><span>Make Noise Twist</span><span>Expert Sleepers ES-9 · to DAW</span>
+          <span>Doepfer A-100 · utility rack</span>
+        </div>
+      </div>
+
+      <div class="group big reveal" style="--rolec:var(--coral)">
+        <span class="roletag"><span class="dot"></span>Mastering chain · where records get finished</span>
+        <h3>An SSL front to back. This is the part that says you finish things.</h3>
+        <p class="why">Anyone can buy synths. Very few build a real mastering chain at home. You did. A Fusion for the master bus, a SiX desk to sum on, an Alpha VHD preamp array, X-Rack, Alpha-Link conversion, plus boutique color from Bakelab, Warm Audio, and that hot-pink Bébé Chérie on a milk crate. The last one is the tell: you care about the sound of the summing, not just the notes.</p>
+        <div class="pieces">
+          <div class="piece"><div class="pn">SSL Fusion <span class="maker">· stereo master processor</span></div><div class="pd">Vintage Drive, Violet EQ, HF Compressor, Stereo Image. The last box before the record is real.</div></div>
+          <div class="piece"><div class="pn">SSL SiX <span class="maker">· SuperAnalogue desk</span></div><div class="pd">On a footstool, ready to sum the whole room into one stereo bus with real analog glue.</div></div>
+          <div class="piece"><div class="pn">SSL Alpha VHD Pre · X-Rack · Alpha-Link <span class="maker">· preamp + conversion</span></div><div class="pd">Eight channels of red-knob preamp, a SuperAnalogue channel, and clean MADI conversion. A proper front end.</div></div>
+          <div class="piece"><div class="pn">Bakelab Wizard · Warm Audio WA-73 <span class="maker">· color</span></div><div class="pd">A Polish valve saturator and a Neve 1073 clone. This is where warmth gets added on purpose.</div></div>
+          <div class="piece"><div class="pn">OTO Machines Bébé Chérie <span class="maker">· 6-channel analog mixer</span></div><div class="pd">Hot pink, COMP and BLISS onboard, sitting on an overturned milk crate. The most Foster object in the room.</div></div>
+          <div class="piece"><div class="pn">Ferrofish · iConnectivity · TC Electronic · Furman <span class="maker">· glue</span></div><div class="pd">Conversion, MIDI routing, effects, and clean power. The unglamorous parts that make everything else usable.</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- the two tells -->
+    <div class="tells">
+      <div class="tell reveal">
+        <div class="tk">The tell, part one · the bench</div>
+        <h4>You do not just buy modules. You build them.</h4>
+        <p>A Tektronix 100 MHz analog scope, a passive probe kit, loose hookup wire in four colors, a Wera driver, and an anti-static mat. That is not a buyer. That is a hobbyist EE with a soldering iron who repairs and builds his own Eurorack. Nobody keeps a scope on the desk unless the desk is also a lab.</p>
+        <div class="items"><span>Tektronix TAS 465</span><span>P2100 probes</span><span>hookup wire</span><span>Wera driver</span><span>cutting mat</span></div>
+      </div>
+      <div class="tell reveal d1">
+        <div class="tk">The tell, part two · the shelf</div>
+        <h4>You study form. Not just gear.</h4>
+        <p>Jazzology, the standard jazz theory text, sitting next to The Nature of the Violin. Taschen's Jazz Life and Landscapes. A small bronze bust of a classical composer. A man who reads violin acoustics and owns a Moog Muse is not chasing sounds. He is chasing structure, and he wants to understand why a thing works before he plays it.</p>
+        <div class="items"><span>Jazzology</span><span>The Nature of the Violin</span><span>Jazz Life · Taschen</span><span>Landscapes · Taschen</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 2 · THE ROOM, IMAGINED ===== -->
+<section class="band forest" id="room">
+  <div class="wrap">
+    <div class="eyebrow reveal"><span class="num">02</span> The room, imagined</div>
+    <h2 class="sect reveal">How the <span class="em">sound moves.</span></h2>
+    <p class="intro reveal">Here is the room assembled, not as a pile but as a signal path. Everything the machines make flows the same direction, left to right, from voices to summing to master to capture. The modular and the grooveboxes and the three keyboards all pour into the SiX. The SiX sums to the Fusion. The Fusion prints to the Mac Mini. One clock, from Pam's, holds the whole thing in time. That is what makes forty machines a studio instead of forty machines.</p>
+
+    <div class="flow">
+      <div class="flowgrid">
+        <div class="stage s1 reveal">
+          <div class="sh">Stage 01 · voices</div>
+          <h4>The sources</h4>
+          <div class="sd">Everything that makes a sound</div>
+          <ul>
+            <li>Muse, Quantum, Osmose stack</li>
+            <li>Full modular + Doepfer</li>
+            <li>Pērkons, RD-8, TD-3-MO, DB-01</li>
+            <li>Digitone II, Lyra-8, SteamPipe</li>
+          </ul>
+          <div class="arrow" aria-hidden="true">&rarr;</div>
+        </div>
+        <div class="stage s2 reveal d1">
+          <div class="sh">Stage 02 · summing</div>
+          <h4>The SiX desk</h4>
+          <div class="sd">Where the room becomes stereo</div>
+          <ul>
+            <li>SuperAnalogue summing</li>
+            <li>Bébé Chérie as a sub-mixer</li>
+            <li>Alpha VHD for anything mic'd</li>
+            <li>Real analog glue, one bus</li>
+          </ul>
+          <div class="arrow" aria-hidden="true">&rarr;</div>
+        </div>
+        <div class="stage s3 reveal d2">
+          <div class="sh">Stage 03 · master</div>
+          <h4>The Fusion chain</h4>
+          <div class="sd">Where a mix becomes a record</div>
+          <ul>
+            <li>Vintage Drive + Violet EQ</li>
+            <li>HF Compressor, Stereo Image</li>
+            <li>Bakelab / WA-73 color first</li>
+            <li>The last analog stage</li>
+          </ul>
+          <div class="arrow" aria-hidden="true">&rarr;</div>
+        </div>
+        <div class="stage s4 reveal d3">
+          <div class="sh">Stage 04 · capture</div>
+          <h4>The Mac Mini</h4>
+          <div class="sd">Where it becomes a file</div>
+          <ul>
+            <li>ES-9 + Ferrofish conversion</li>
+            <li>Alpha-Link MADI</li>
+            <li>Print stems or a stereo master</li>
+            <li>Probably tracking direct, and fine</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="clockrail reveal" role="note">
+        <span class="pulse" aria-hidden="true"></span>
+        One clock &middot; Pamela's PRO Workout runs the whole room, so the modular, the grooveboxes, and the Digitone all breathe on the same pulse
+      </div>
+
+      <p class="flownote reveal">Three moves make it a performance instrument, not just a collection. <b>The three keyboards become one stack:</b> Osmose for expression, Muse for warmth, Quantum for texture, all playable at once. <b>The grooveboxes become a rhythm section:</b> Pērkons and RD-8 and Digitone II and TD-3-MO, clocked together, are a live drummer and bassist you can conduct. <b>Lyra-8 and Spectravox live on the mantel as texture instruments,</b> the atmosphere you reach for with one hand while the other plays the stack. That is the room. Not gear near gear. A single instrument with a hundred keys.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 3 · WHAT WOULD BE POSSIBLE ===== -->
+<section class="band tint" id="possible">
+  <div class="wrap">
+    <div class="eyebrow reveal"><span class="num">03</span> What would be possible</div>
+    <h2 class="sect reveal">Seven records <span class="em">already in the room.</span></h2>
+    <p class="intro reveal">This is the part that matters. You are teaching yourself bass music production at fifty-five, and the room you built can already make far more than one kind of record. These are not fantasies. Every one of them is achievable with the exact machines you own, wired the way the room already wants to be wired. Pick one. You have everything.</p>
+
+    <div class="props">
+      <div class="prop reveal">
+        <div class="idx">01</div>
+        <h3>The Fang Speare bass EP</h3>
+        <div class="role">the one you are already reaching for</div>
+        <p>The rhythm section at the core, the grooveboxes clocked hard, TD-3-MO acid over an 808 spine. Muse for the warm sub and the pads. Spectravox as an FX chain to mangle a vocal or a lead. Sum on the SiX, print through the Fusion so it hits like a real release, not a bedroom bounce.</p>
+        <div class="chain"><span>Pērkons</span><span>RD-8</span><span>TD-3-MO</span><span>Digitone II</span><span>Muse</span><span>Spectravox</span><span>SiX &rarr; Fusion</span></div>
+      </div>
+      <div class="prop reveal d1">
+        <div class="idx">02</div>
+        <h3>A generative record</h3>
+        <div class="role">the room composing itself</div>
+        <p>Marbles feeding controlled randomness, Pam's holding the clock, Elements and Beads making the pads and grains. The Muse sings a slow melody on top while the modular writes the accompaniment. You are not performing it so much as gardening it. Fusion masters, SiX sums, and no two passes are ever the same.</p>
+        <div class="chain"><span>Marbles</span><span>Pam's PRO</span><span>Elements</span><span>Beads</span><span>Muse</span><span>Fusion</span></div>
+      </div>
+      <div class="prop reveal d2">
+        <div class="idx">03</div>
+        <h3>A film score EP</h3>
+        <div class="role">for picture, or just for dread</div>
+        <p>Osmose for the expressive lines that have to breathe like real players. Quantum for texture and weather. Lyra-8 for the dread under a scene. Muse for warmth where the picture needs a heartbeat. Print the whole thing to the SSL so it sits like something scored, not sketched.</p>
+        <div class="chain"><span>Osmose</span><span>Quantum</span><span>Lyra-8</span><span>Muse</span><span>SSL master</span></div>
+      </div>
+      <div class="prop reveal">
+        <div class="idx">04</div>
+        <h3>A live A/V ambient set</h3>
+        <div class="role">a booking, not a bedroom</div>
+        <p>Full modular plus Osmose plus Lyra-8, everything clocked from Pam's, mixed live on the SiX. A portable rig you could actually take to a room. Think a Wave XR stage, a MUTEK-adjacent booking, a Sonar slot. The kind of set that proves a home studio can leave the house.</p>
+        <div class="chain"><span>Modular</span><span>Osmose</span><span>Lyra-8</span><span>Pam's clock</span><span>SiX live</span></div>
+      </div>
+      <div class="prop reveal d1">
+        <div class="idx">05</div>
+        <h3>A DIY module-build series</h3>
+        <div class="role">the bench goes public</div>
+        <p>You already have the Tektronix, the probes, the wire, the driver. Turn the bench into content or open hardware. Build a module on camera, publish the schematic, share the design. It ties straight to how you think about abundance. The room that gives, instead of the room that hoards.</p>
+        <div class="chain"><span>Tektronix bench</span><span>probes</span><span>schematics</span><span>open hardware</span></div>
+      </div>
+      <div class="prop reveal d2">
+        <div class="idx">06</div>
+        <h3>Jazz theory meets electronics</h3>
+        <div class="role">because the shelf is right there</div>
+        <p>Jazzology is sitting three feet from a Moog Muse. Take real jazz harmony, voice-leading, the honest theory, and play it through analog and modular voices. A fusion piece that could only come from someone who reads The Nature of the Violin and owns a mastering chain. Nobody else in this scene has both.</p>
+        <div class="chain"><span>Jazzology voicings</span><span>Muse</span><span>Osmose</span><span>modular</span></div>
+      </div>
+      <div class="prop reveal">
+        <div class="idx">07</div>
+        <h3>The Wave XR template</h3>
+        <div class="role">a home rig as a stage design</div>
+        <p>Most XR performance venues feel like a sterile controller rig. Yours does not. A room this warm and this deep, translated into an XR set, is a template for what a virtual stage could feel like when a real instrument is behind it. Worth a conversation with the Wave world. The home studio as a proof of concept.</p>
+        <div class="chain"><span>full room</span><span>live signal path</span><span>XR stage</span><span>Wave</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 4 · WHAT'S MISSING / NEXT ===== -->
+<section class="band" id="next">
+  <div class="wrap">
+    <div class="eyebrow reveal"><span class="num">04</span> What is missing, and what is next</div>
+    <h2 class="sect reveal">Honest, and <span class="em">restrained.</span></h2>
+    <p class="intro reveal">The room is close to complete, so this is short on purpose. A few things I could not see from photos, and a few small proposals that fit the soul of what you built. Nothing here is a shopping list. If a piece does not make the room more itself, it does not belong on this page.</p>
+
+    <div class="missing">
+      <div class="miss reveal">
+        <span class="mtag open">open question</span>
+        <h4>Room treatment</h4>
+        <p>I cannot tell from the photos. A room this beautiful, sage stripes and marble mantel, may or may not be treated for sound. If the SSL chain is going to earn its keep, the room has to be honest first. Worth telling me what the acoustics are actually doing.</p>
+      </div>
+      <div class="miss reveal d1">
+        <span class="mtag prop">proposal</span>
+        <h4>Monitoring</h4>
+        <p>I see two monitors but cannot identify them. This is the one place I would spend next. A considered pair of nearfields is the difference between hearing what the Fusion did and guessing. Everything upstream is already better than the speakers probably are.</p>
+      </div>
+      <div class="miss reveal">
+        <span class="mtag prop">proposal</span>
+        <h4>A mic to match the pop filter</h4>
+        <p>There is a pop filter on a gooseneck in vocal position, but I did not see a microphone worth that filter, or that preamp. A single good large-diaphragm condenser would let the WA-73 and the Alpha VHD finally do what they are there for.</p>
+      </div>
+      <div class="miss reveal d1">
+        <span class="mtag open">worth an opinion</span>
+        <h4>The sequencer question</h4>
+        <p>Pam's runs the clock and the Digitone can sequence, so you may not need more. But if you ever want a single hardware brain to arrange the whole room without the Mac, that is the one gap I would think about. Your call, and I would want to hear how you sequence now.</p>
+      </div>
+      <div class="miss reveal">
+        <span class="mtag prop">proposal</span>
+        <h4>Something for the hands</h4>
+        <p>A Push 3 or a MidiFighter Twister would give you tactile control over the modular and the Mac without reaching for a mouse. Small, but it keeps you playing the instrument instead of operating a computer. Only if it fits how you actually work.</p>
+      </div>
+      <div class="miss reveal d1">
+        <span class="mtag fine">probably fine</span>
+        <h4>Tracking to the Mac Mini</h4>
+        <p>You are almost certainly recording direct to the Mac Mini through the ES-9 and the Alpha-Link, and that is completely fine. A Mac Mini is more than enough for this. No need to change anything here. I just wanted to close the loop honestly.</p>
+      </div>
+    </div>
+
+    <div class="mantel reveal">
+      <div class="inr">
+        <div class="mk">The mantel principle</div>
+        <h3>Add almost nothing. Play what is there.</h3>
+        <p>The truth is you do not need much. A pair of speakers you trust and a microphone you love, and this room is finished. The rest of the list above is optional. The real next step is not a purchase. It is pressing record on any one of the seven records already sitting in the room.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 5 · SEEN WITH LOVE ===== -->
+<section class="band letter" id="love">
+  <div class="wrap">
+    <div class="eyebrow reveal"><span class="num">05</span> The room, seen with love</div>
+    <h2 class="sect reveal">The room <span class="em">is you.</span></h2>
+
+    <div class="love reveal">
+      <div class="from">A note, from Gordon</div>
+      <p class="lead">Fos, I have known you since we were sophomores. Forty years. You moved across the country to help me build a career, then went home to build your own life, and somewhere in there I got to hand you EDM at Ultra and watch you fall for it the way we all do. And now this. A room.</p>
+      <p>Here is what I see when I look at your twenty pictures. There is a <span class="i">baby stroller</span> folded in one frame, and a <span class="i">Trapper Keeper</span> in the pink-striped alcove, and a bookshelf where Jazzology sits next to The Nature of the Violin. There is a Moog Muse three feet from that shelf. There is a hot-pink Bébé Chérie sitting on an overturned milk crate, next to an SSL chain that costs more than some cars. There is a Tektronix scope on the desk because you do not just buy the modules, you build them.</p>
+      <p>None of that fits together on a spreadsheet. All of it fits together in you. A man who reads violin acoustics and owns a soldering iron. A portfolio manager who teaches himself bass music at fifty-five. Someone who names himself after a toad-riding sage and then actually collects the woodblock prints of the artist who drew him. The room is not a collection because you are not a collection. You are all of it at once, and the room is just the part I can finally see.</p>
+      <p>So do not let it sit there looking expensive. It is not a museum. It is an instrument, and it is waiting for your hands. Press record. Make the ugly first pass. Then make the good one. I will be the first to hear it, the way I have been first to a lot of things with you for forty years.</p>
+      <div class="sig">The room is you, Fos. Now go play it.
+        <small>Gordon &middot; LYMI</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <svg class="crest" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+    <ellipse cx="20" cy="25" rx="13" ry="9" fill="#5c7a60"/>
+    <circle cx="14" cy="20" r="3.8" fill="#5c7a60"/><circle cx="26" cy="20" r="3.8" fill="#5c7a60"/>
+    <circle cx="14" cy="20.5" r="1.6" fill="#243c2c"/><circle cx="26" cy="20.5" r="1.6" fill="#243c2c"/>
+    <path d="M13 28 Q20 32 27 28" stroke="#243c2c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M20 5 L20 15 M20 5 l-2.6 4 M20 5 l2.6 4" stroke="#a97f38" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  </svg>
+  <p>The Whole Instrument &middot; for Foster, from Gordon &middot; built on seeing the room, July 2026</p>
+</footer>
+
+<script>
+(function(){
+  if(!document.documentElement.classList.contains('js')) return;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+})();
+</script>
+
+<!-- ===== ASK / CLARIFY WIDGET ===== -->
+<style>
+.ask-fab{position:fixed;right:20px;bottom:20px;z-index:90;display:flex;align-items:center;gap:9px;
+  background:var(--forest);color:#f3ecdb;border:none;cursor:pointer;
+  font-family:"Space Mono",monospace;font-size:12px;letter-spacing:0.06em;
+  padding:13px 18px;border-radius:40px;box-shadow:0 14px 34px -14px rgba(20,30,18,0.8);
+  transition:transform .18s, box-shadow .18s}
+.ask-fab:hover{transform:translateY(-2px);box-shadow:0 20px 40px -14px rgba(20,30,18,0.85)}
+.ask-fab svg{width:18px;height:18px}
+.ask-panel{position:fixed;right:20px;bottom:20px;z-index:95;width:min(400px,calc(100vw - 32px));
+  height:min(620px,calc(100vh - 32px));background:var(--paper);border:1px solid var(--line);
+  border-radius:20px;box-shadow:0 30px 70px -24px rgba(20,30,18,0.7);
+  display:none;flex-direction:column;overflow:hidden}
+.ask-panel.open{display:flex}
+.ask-head{background:var(--forest);color:#f3ecdb;padding:15px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ask-head b{font-family:"Fraunces",serif;font-size:16px;font-weight:600}
+.ask-head small{display:block;font-family:"Space Mono",monospace;font-size:10px;letter-spacing:0.08em;opacity:0.72;margin-top:2px}
+.ask-x{background:none;border:none;color:#f3ecdb;font-size:22px;line-height:1;cursor:pointer;opacity:0.8;padding:2px 6px}
+.ask-x:hover{opacity:1}
+.ask-log{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:var(--paper2)}
+.ask-msg{max-width:88%;padding:11px 14px;border-radius:14px;font-size:14.5px;line-height:1.55;white-space:pre-wrap}
+.ask-msg.me{align-self:flex-end;background:var(--forest);color:#f3ecdb;border-bottom-right-radius:4px}
+.ask-msg.bot{align-self:flex-start;background:var(--card);color:var(--ink);border:1px solid var(--line-soft);border-bottom-left-radius:4px}
+.ask-msg.bot.think{color:var(--muted);font-style:italic}
+.ask-hint{align-self:center;color:var(--muted);font-family:"Space Mono",monospace;font-size:11px;text-align:center;line-height:1.6;padding:6px 10px}
+.ask-chips{display:flex;flex-wrap:wrap;gap:7px;padding:0 16px 10px;background:var(--paper2)}
+.ask-chip{background:var(--card);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;
+  font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:0.02em;padding:7px 11px;border-radius:30px;transition:background .15s,color .15s}
+.ask-chip:hover{background:var(--sage);color:#f3ecdb;border-color:var(--sage)}
+.ask-foot{border-top:1px solid var(--line);background:var(--paper);padding:11px;display:flex;flex-direction:column;gap:8px}
+.ask-mode{display:flex;gap:6px}
+.ask-mode button{flex:1;background:var(--paper2);border:1px solid var(--line);color:var(--muted);cursor:pointer;
+  font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:0.05em;text-transform:uppercase;padding:6px;border-radius:8px}
+.ask-mode button.on{background:var(--forest);color:#f3ecdb;border-color:var(--forest)}
+.ask-inrow{display:flex;gap:8px;align-items:flex-end}
+.ask-inrow textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:12px;background:var(--card);
+  font-family:"Inter",sans-serif;font-size:14.5px;color:var(--ink);padding:10px 12px;max-height:120px;line-height:1.4}
+.ask-send{background:var(--coral);border:none;color:#fff;cursor:pointer;border-radius:12px;padding:0 15px;height:42px;
+  font-family:"Space Mono",monospace;font-size:12px}
+.ask-send:disabled{opacity:0.5;cursor:default}
+@media (max-width:520px){.ask-msg{font-size:15.5px}}
+</style>
+
+<button class="ask-fab" id="askFab" aria-label="Ask about the studio">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  Ask about your studio
+</button>
+
+<div class="ask-panel" id="askPanel" role="dialog" aria-label="Studio assistant">
+  <div class="ask-head">
+    <div><b>The Room, Answering</b><small>ASK IT ANYTHING &middot; OR SET ME STRAIGHT</small></div>
+    <button class="ask-x" id="askClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="ask-log" id="askLog">
+    <div class="ask-msg bot">Hey Foster. This is your studio, talking back. Ask me what you could build with any pieces in here, or correct anything the site got wrong (the monitors, whether there's a mic, the room treatment). What Gordon has me guessing at, you can settle. Where do you want to start?</div>
+  </div>
+  <div class="ask-chips" id="askChips">
+    <button class="ask-chip" data-q="What's the fastest path to finishing a full track in here?">Finish a track fast</button>
+    <button class="ask-chip" data-q="Give me a signal chain for a live drone + techno set.">A live set chain</button>
+    <button class="ask-chip" data-q="What one piece is my studio missing most?">What am I missing?</button>
+    <button class="ask-chip" data-clarify="Let me correct the monitors: they are ">Fix the monitors</button>
+  </div>
+  <div class="ask-foot">
+    <div class="ask-mode">
+      <button id="mAsk" class="on" data-mode="ask">Ask a question</button>
+      <button id="mClar" data-mode="clarify">Clarify / correct</button>
+    </div>
+    <div class="ask-inrow">
+      <textarea id="askIn" rows="1" placeholder="Type here..."></textarea>
+      <button class="ask-send" id="askSend">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var API = "https://eligibility-mic-west-measure.trycloudflare.com/ask";
+  var fab=document.getElementById('askFab'), panel=document.getElementById('askPanel'),
+      log=document.getElementById('askLog'), input=document.getElementById('askIn'),
+      send=document.getElementById('askSend'), mode='ask';
+  function open(){panel.classList.add('open');fab.style.display='none';input.focus();}
+  function close(){panel.classList.remove('open');fab.style.display='';}
+  fab.onclick=open; document.getElementById('askClose').onclick=close;
+  document.getElementById('mAsk').onclick=function(){mode='ask';this.classList.add('on');document.getElementById('mClar').classList.remove('on');input.placeholder='Ask what you could make in here...';};
+  document.getElementById('mClar').onclick=function(){mode='clarify';this.classList.add('on');document.getElementById('mAsk').classList.remove('on');input.placeholder='Tell me what the site got wrong...';};
+  input.addEventListener('input',function(){input.style.height='auto';input.style.height=Math.min(input.scrollHeight,120)+'px';});
+  input.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submit();}});
+  document.getElementById('askChips').addEventListener('click',function(e){
+    var b=e.target.closest('.ask-chip'); if(!b)return;
+    if(b.dataset.clarify){document.getElementById('mClar').click();input.value=b.dataset.clarify;input.focus();input.dispatchEvent(new Event('input'));}
+    else{input.value=b.dataset.q;submit();}
+  });
+  function bubble(txt,cls){var d=document.createElement('div');d.className='ask-msg '+cls;d.textContent=txt;log.appendChild(d);log.scrollTop=log.scrollHeight;return d;}
+  function submit(){
+    var msg=input.value.trim(); if(!msg)return;
+    bubble(msg,'me'); input.value=''; input.style.height='auto';
+    send.disabled=true;
+    var think=bubble(mode==='clarify'?'Noted, updating...':'Thinking...','bot think');
+    fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,mode:mode})})
+      .then(function(r){return r.json();})
+      .then(function(d){think.remove();bubble(d.answer||'Hm, no answer came back. Try again?','bot');})
+      .catch(function(){think.remove();bubble("I can't reach my brain right now. It only runs while Gordon's studio machine is awake, so give it a minute and try again, or text him.",'bot');})
+      .finally(function(){send.disabled=false;input.focus();});
+  }
+  send.onclick=submit;
+})();
+</script>
+</body>
+</html>
