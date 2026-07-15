@@ -454,7 +454,7 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
       <div class="module wide reveal">
         <div class="mtag">Fang Speare <span class="chip">/ the toad-sage designs his own sound</span></div>
         <h3>Two-operator FM voice</h3>
-        <p class="cap">This is me at the bench. Turn the knobs to shape a voice out of two sine waves, then play it on the keys or hit sing. Drag a knob up and down, or focus it and use the arrow keys.</p>
+        <p class="cap">This is me at the bench. Carrier and modulator, my own numbers, my own ratio, not a preset. Turn the knobs to shape a voice out of two sine waves, then play it on the keys or hit sing. Drag a knob up and down, or focus it and use the arrow keys. <span id="ratioReadout" style="color:var(--brass2)"></span></p>
         <div class="fmbody">
           <div>
             <canvas class="fmscope" id="fmScope" width="560" height="96" aria-hidden="true"></canvas>
@@ -462,8 +462,14 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
             <button class="play singbtn" id="fmSing">✧ Sing a phrase</button>
           </div>
           <div class="knobs" id="fmKnobs">
-            <div class="knob" data-p="ratio" data-min="0.5" data-max="8" data-step="0.1" data-val="3.5" tabindex="0" role="slider" aria-label="FM ratio" aria-valuemin="0.5" aria-valuemax="8" aria-valuenow="3.5">
-              <div class="ring"><div class="dial"></div></div><div class="kl">Ratio</div><div class="kval"></div><input class="kin" type="number" step="0.1" min="0.5" max="8" aria-label="Type FM ratio">
+            <div class="knob" data-p="ratioNum" data-min="1" data-max="16" data-step="1" data-val="7" tabindex="0" role="slider" aria-label="Carrier ratio number" aria-valuemin="1" aria-valuemax="16" aria-valuenow="7">
+              <div class="ring"><div class="dial"></div></div><div class="kl">Carrier</div><div class="kval"></div><input class="kin" type="number" step="1" min="1" max="16" aria-label="Type carrier ratio number">
+            </div>
+            <div class="knob" data-p="ratioDen" data-min="1" data-max="16" data-step="1" data-val="2" tabindex="0" role="slider" aria-label="Modulator ratio number" aria-valuemin="1" aria-valuemax="16" aria-valuenow="2">
+              <div class="ring"><div class="dial"></div></div><div class="kl">Modulator</div><div class="kval"></div><input class="kin" type="number" step="1" min="1" max="16" aria-label="Type modulator ratio number">
+            </div>
+            <div class="knob" data-p="octave" data-min="-3" data-max="3" data-step="1" data-val="0" tabindex="0" role="slider" aria-label="Octave shift" aria-valuemin="-3" aria-valuemax="3" aria-valuenow="0">
+              <div class="ring"><div class="dial"></div></div><div class="kl">Octave</div><div class="kval"></div><input class="kin" type="number" step="1" min="-3" max="3" aria-label="Type octave shift">
             </div>
             <div class="knob" data-p="depth" data-min="0" data-max="12" data-step="0.1" data-val="4" tabindex="0" role="slider" aria-label="FM modulation depth" aria-valuemin="0" aria-valuemax="12" aria-valuenow="4">
               <div class="ring"><div class="dial"></div></div><div class="kl">Depth</div><div class="kval"></div><input class="kin" type="number" step="0.1" min="0" max="12" aria-label="Type FM depth">
@@ -1394,17 +1400,26 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
   });
 
   /* ============ FM VOICE ============ */
-  var fmParams={ratio:3.5, depth:4, attack:0.01, release:0.9, cutoff:3200};
+  var fmParams={ratioNum:7, ratioDen:2, octave:0, depth:4, attack:0.01, release:0.9, cutoff:3200};
+  var INT_PARAMS={ratioNum:1,ratioDen:1,octave:1};
+  function updateRatioReadout(){
+    var el=document.getElementById('ratioReadout'); if(!el)return;
+    var n=fmParams.ratioNum, d=fmParams.ratioDen;
+    el.textContent = n+':'+d+' ('+(n/d).toFixed(2)+':1)';
+  }
   function fmSet(el, v, skipInput){
     var min=+el.dataset.min, max=+el.dataset.max, p=el.dataset.p;
-    v=Math.min(max,Math.max(min,v)); fmParams[p]=v;
+    v=Math.min(max,Math.max(min,v));
+    if(INT_PARAMS[p]) v=Math.round(v);
+    fmParams[p]=v;
     var norm=(v-min)/(max-min);
     el.querySelector('.dial').style.transform='translateX(-50%) rotate('+(-135+norm*270)+'deg)';
-    el.setAttribute('aria-valuenow', v.toFixed(p==='cutoff'?0:2));
+    el.setAttribute('aria-valuenow', v.toFixed(p==='cutoff'||INT_PARAMS[p]?0:2));
     var out=el.querySelector('.kval');
-    out.textContent = p==='cutoff' ? Math.round(v)+' Hz' : (p==='ratio'?v.toFixed(2)+':1':v.toFixed(2));
+    out.textContent = p==='cutoff' ? Math.round(v)+' Hz' : (p==='octave' ? (v>0?'+'+v:''+v) : (INT_PARAMS[p] ? Math.round(v) : v.toFixed(2)));
     var inp=el.querySelector('.kin');
-    if(inp && !skipInput && document.activeElement!==inp){ inp.value = p==='cutoff'?Math.round(v):v.toFixed(2); }
+    if(inp && !skipInput && document.activeElement!==inp){ inp.value = (p==='cutoff'||INT_PARAMS[p]) ? Math.round(v) : v.toFixed(2); }
+    if(p==='ratioNum'||p==='ratioDen') updateRatioReadout();
   }
   document.querySelectorAll('#fmKnobs .knob').forEach(function(el){
     fmSet(el, +el.dataset.val);
@@ -1431,11 +1446,13 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
       kin.addEventListener('keydown',function(e){ e.stopPropagation(); if(e.key==='Enter'){ kin.blur(); } });
     }
   });
-  function p_init(el){ var p=el.dataset.p, v=fmParams[p]; return p==='cutoff'?Math.round(v):v.toFixed(2); }
+  function p_init(el){ var p=el.dataset.p, v=fmParams[p]; return (p==='cutoff'||INT_PARAMS[p])?Math.round(v):v.toFixed(2); }
+  updateRatioReadout();
   function playFM(midi, when){
-    ensureAudio(); var t=T(when); var f=ntof(midi);
+    ensureAudio(); var t=T(when); var f=ntof(midi+fmParams.octave*12);
+    var ratio=fmParams.ratioNum/fmParams.ratioDen;
     var car=ac.createOscillator(); car.type='sine'; car.frequency.value=f;
-    var mod=ac.createOscillator(); mod.type='sine'; mod.frequency.value=f*fmParams.ratio;
+    var mod=ac.createOscillator(); mod.type='sine'; mod.frequency.value=f*ratio;
     var mg=ac.createGain(); mg.gain.value=f*fmParams.depth; mod.connect(mg); mg.connect(car.frequency);
     var filt=ac.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value=fmParams.cutoff; filt.Q.value=1.5;
     var g=ac.createGain(); car.connect(filt); filt.connect(g); g.connect(fmOut);
