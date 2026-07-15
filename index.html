@@ -172,6 +172,8 @@ h1.htitle .em{background:linear-gradient(92deg,var(--brass2),var(--coral2));-web
 .mini{cursor:pointer;min-height:38px;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--ink-soft);
   font-family:"Space Mono",monospace;font-size:11px;letter-spacing:0.05em;padding:9px 12px;transition:.16s}
 .mini:hover{border-color:var(--brass);color:var(--brass2)}
+select.mini{-webkit-appearance:none;appearance:none;font-family:"Space Mono",monospace}
+select.mini option{background:var(--wood2);color:var(--ink)}
 .tempo{display:flex;align-items:center;gap:9px;font-family:"Space Mono",monospace;font-size:11px;color:var(--muted);margin-left:auto}
 .tempo input{width:118px}
 input[type=range]{accent-color:var(--brass)}
@@ -363,7 +365,14 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
         <div class="transport">
           <button class="play" id="seqPlay" aria-pressed="false">▶ Play</button>
           <button class="mini" id="seqClear">Clear</button>
-          <button class="mini" id="seqDemo">Load a beat</button>
+          <select class="mini" id="seqDemo" aria-label="Load a beat inspired by an artist or scene Gordon loves">
+            <option value="" selected disabled>Load a beat...</option>
+            <option value="chrislake">Chris Lake — tech house</option>
+            <option value="alison">Alison Wonderland — Cosmic Meadow</option>
+            <option value="portola">Portola — peak-time techno</option>
+            <option value="edc">EDC main stage — big room</option>
+            <option value="avicii">Avicii — Levels</option>
+          </select>
           <label class="tempo">Tempo <input type="range" id="seqTempo" min="90" max="160" value="124" aria-label="Sequencer tempo in BPM"> <span id="seqBpm">124</span></label>
         </div>
         <div class="seq" id="seqGrid"></div>
@@ -852,17 +861,30 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
   document.getElementById('seqClear').addEventListener('click',function(){
     seqRows.forEach(function(r){ for(var i=0;i<STEPS;i++){ pattern[r.k][i]=false; stepEls[r.k][i].classList.remove('on'); stepEls[r.k][i].setAttribute('aria-pressed','false'); } });
   });
-  var demoBeat={
-    rd8:[0,4,8,12], snare:[4,12], hat:[2,6,10,14], bass:[0,3,6,7,10,14], lead:[0,8,11]
+  var demoBeats={
+    // Chris Lake — tech house: four-on-floor kick, syncopated bass, tight groove hats
+    chrislake:{tempo:124, rd8:[0,4,8,12], snare:[4,12], hat:[0,2,4,6,8,10,12,14], bass:[2,3,7,10,11,15], lead:[6,14]},
+    // Alison Wonderland, Cosmic Meadow (EDC '26, closed on Avicii's "Levels") — half-time melodic bass weight
+    alison:{tempo:150, rd8:[0,8], snare:[4,12], hat:[2,6,10,14], bass:[0,3,6,8,11,14], lead:[0,3,6,8,11,14,15]},
+    // Portola — driving peak-time techno, relentless 16th hats
+    portola:{tempo:132, rd8:[0,4,8,12], snare:[12], hat:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], bass:[0,4,8,12], lead:[8]},
+    // EDC main stage — big room build into a huge drop
+    edc:{tempo:128, rd8:[0,4,8,12], snare:[14,15], hat:[2,6,10,13,14,15], bass:[0,4,8,12], lead:[0,2,4,6,8,10,12,14]},
+    // Avicii, "Levels" — progressive anthem, swung clap, riff-like lead motif
+    avicii:{tempo:126, rd8:[0,4,8,12], snare:[4,12], hat:[0,2,4,6,8,10,12,14], bass:[0,4,8,12], lead:[0,2,3,5,7,8,10,11,13,15]}
   };
-  document.getElementById('seqDemo').addEventListener('click',function(){
+  document.getElementById('seqDemo').addEventListener('change',function(e){
     ensureAudio();
+    var demoBeat=demoBeats[e.target.value];
+    if(!demoBeat) return;
     seqRows.forEach(function(r){
       for(var i=0;i<STEPS;i++){
         var on=demoBeat[r.k] && demoBeat[r.k].indexOf(i)>=0;
         pattern[r.k][i]=on; stepEls[r.k][i].classList.toggle('on',on); stepEls[r.k][i].setAttribute('aria-pressed',on?'true':'false');
       }
     });
+    seqTempo=demoBeat.tempo; tempoIn.value=demoBeat.tempo; bpmOut.textContent=demoBeat.tempo;
+    e.target.value='';
   });
   var tempoIn=document.getElementById('seqTempo'), bpmOut=document.getElementById('seqBpm');
   tempoIn.addEventListener('input',function(){ seqTempo=+tempoIn.value; bpmOut.textContent=seqTempo; });
