@@ -74,6 +74,14 @@
 - **Pop filter** on gooseneck (vocal position)
 - **Zoom H-series** field recorder (H1n or H2n)
 
+## MONITORING (identified 2026-07-15 from a later photo)
+
+- **ADAM Audio studio monitors** — matched pair, one on each side on black speaker stands. Gold ribbon (X-ART) tweeter visible, green power LED, "ADAM AUDIO" branding confirmed. Likely **A7V** or a close sibling. Ribbon tweeter is known for high-frequency accuracy — pairs well with the SSL Fusion mastering chain. Monitoring is fully covered; no upgrade needed.
+
+## ROOM / WALL
+
+- **Large abstract painting** above the Moog Muse on the sage-striped wall. Pale-blue ground, orange/peach star/asterisk shapes, white swirling brushstrokes, geometric elements (green rectangle), red/pink/yellow/black accents. Expressionist, chaotic, personal — reads as chosen or gifted, not a stock print. Part of the room's character.
+
 ## ELECTRONICS BENCH (this is the tell)
 
 - **Tektronix TAS 465** — 2-channel 100 MHz analog oscilloscope
@@ -121,3 +129,5 @@ Three distinct musical worlds sitting in one room, none of them casual:
 And then he **finishes records** on the SSL chain, and **builds modules** on the Tektronix bench, and **reads Jazzology** on the shelf.
 
 Not a hobbyist. Not one genre. A polymath's studio.
+- **Roland VT-4** Voice Transformer (vocal effects/harmonizer/vocoder). Seen on the desk with XLR mic and USB. Pairs with the pop filter + mic setup.
+- **Bach: Six Sonatas & Partitas for Violin** on the bookshelf (confirmed in desk photo).

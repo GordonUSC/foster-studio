@@ -402,8 +402,20 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
             <optgroup label="Live / funk">
               <option value="biggigantic">Big Gigantic</option>
             </optgroup>
+            <optgroup label="Drum &amp; bass">
+              <option value="liquid">Liquid, rolling Amen</option>
+              <option value="neurofunk">Neurofunk, dark + technical</option>
+              <option value="jumpup">Jump-up, fun + aggressive</option>
+              <option value="techstep">Techstep, cold + industrial</option>
+            </optgroup>
+            <optgroup label="Run DMC / boom-bap">
+              <option value="walkthisway">Walk This Way</option>
+              <option value="itstricky">It's Tricky</option>
+              <option value="suckermcs">Sucker MCs</option>
+              <option value="kingofrock">King of Rock</option>
+            </optgroup>
           </select>
-          <label class="tempo">Tempo <input type="range" id="seqTempo" min="90" max="160" value="124" aria-label="Sequencer tempo in BPM"> <span id="seqBpm">124</span></label>
+          <label class="tempo">Tempo <input type="range" id="seqTempo" min="90" max="180" value="124" aria-label="Sequencer tempo in BPM"> <span id="seqBpm">124</span></label>
         </div>
         <div class="seq" id="seqGrid"></div>
       </div>
@@ -495,7 +507,7 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
     <div class="love reveal">
       <div class="from">A note to myself</div>
       <p class="lead">Forty years ago I moved across the country to help Gordon build a career. All that time, without quite noticing, I was also collecting something for myself, one sound at a time.</p>
-      <p>A <span class="i">baby stroller</span> folded in one frame. A <span class="i">Trapper Keeper</span> in the pink alcove. Jazzology three feet from the Moog Muse. A hot-pink Bébé Chérie on an overturned milk crate. A Tektronix scope on the desk, because I do not just buy the sound, I open it up and make it mine. None of this is gear. Each piece is a night, a chord, a room, a feeling I wanted to hold onto. The books and the synths are the same object to me: an experience I keep coming back to.</p>
+      <p>A <span class="i">baby stroller</span> folded in one frame. A <span class="i">Trapper Keeper</span> in the pink alcove. Jazzology three feet from the Moog Muse. The abstract canvas hung above that Muse, all pale blue and orange stars and white swirl, that says more about me than any faceplate in the room. A hot-pink Bébé Chérie on an overturned milk crate. A Tektronix scope on the desk, because I do not just buy the sound, I open it up and make it mine. None of this is gear. Each piece is a night, a chord, a room, a feeling I wanted to hold onto. The books and the synths are the same object to me: an experience I keep coming back to.</p>
       <p>So this is not a studio. It is a <span class="i">museum of my own ear</span>. I am not collecting gear. I am collecting myself, and every piece is a moment I refuse to let go of. Nothing here was a trade-off. Every one of these was a yes. Now I get to open it up and play it.</p>
       <div class="sig">Now I go play it.
         <small>Fang Speare · the toad-sage</small>
@@ -1049,6 +1061,24 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
     ampEnv(g,t,0.01,0.16,0.4); saw.start(t); saw.stop(t+0.6);
     sendRev(g,0.16,t);
   };
+  // Roland VT-4 — harmonized vocal formant shimmer (pitch + vocoder + harmony)
+  V.vt4=function(dest,root,when){
+    root=root||60; var t=T(when);
+    var g=ac.createGain(); g.connect(dest||preMaster);
+    var formants=[[720,1],[1240,0.6],[2600,0.35]]; // vowel "ah"/"eh" between
+    [0,4,7,12].forEach(function(x,i){ // harmonized: root, 3rd, 5th, octave
+      var saw=ac.createOscillator(); saw.type='sawtooth';
+      saw.frequency.value=ntof(root+x); saw.detune.value=(i-1.5)*7;
+      formants.forEach(function(f){
+        var bp=ac.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=f[0]; bp.Q.value=11;
+        var fg=ac.createGain(); fg.gain.value=f[1]*0.45;
+        saw.connect(bp); bp.connect(fg); fg.connect(g);
+      });
+      saw.start(t); saw.stop(t+1.3);
+    });
+    ampEnv(g,t,0.05,0.18,1.1);
+    sendRev(g,0.3,t);
+  };
 
   /* ============ VOICES ROW ============ */
   var voiceTiles=[
@@ -1071,6 +1101,7 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
     {k:'beads',   n:'Beads',      d:'granular',      c:'#a0e0d0', root:67},
     {k:'starlab', n:'Starlab',    d:'shimmer',       c:'#9ec8ff', root:72},
     {k:'doepfer', n:'Doepfer A-100',d:'drone',       c:'#8ea2bd', root:33},
+    {k:'vt4',     n:'VT-4',       d:'vocal formant', c:'#c98ad9', root:60},
     {k:'bench',   n:'The Bench',  d:'test signal',   c:'#6fd0a0', root:0}
   ];
   var voicesRow=document.getElementById('voicesRow');
@@ -1246,7 +1277,27 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
 
     // Live / funk (Big Gigantic, future funk with a live band feel)
     biggigantic:{tempo:100, voices:{rd8:'disco',snare:'clap',hat:'shaker',bass:'funk',lead:'pluck'},
-      rd8:[0,6,8,14], snare:[4,12], hat:[2,3,6,7,10,11,14,15], bass:[0,3,6,8,10,13], lead:[2,5,8,10,13]}
+      rd8:[0,6,8,14], snare:[4,12], hat:[2,3,6,7,10,11,14,15], bass:[0,3,6,8,10,13], lead:[2,5,8,10,13]},
+
+    // Drum & bass — snare on the 2 and 4 (steps 4 + 12), half-time feel over fast BPM
+    liquid:{tempo:170, voices:{rd8:'classic',snare:'clap',hat:'open',bass:'sub',lead:'pluck'},
+      rd8:[0,10], snare:[4,12], hat:[0,2,4,6,8,10,11,12,14,15], bass:[0,3,4,7,8,11,12,15], lead:[2,6,10,14]},
+    neurofunk:{tempo:174, voices:{rd8:'techno',snare:'rimshot',hat:'ride',bass:'wobble',lead:'bell'},
+      rd8:[0,10], snare:[4,12], hat:[0,3,4,6,8,11,12,14], bass:[0,2,3,6,8,10,11,14], lead:[7,15]},
+    jumpup:{tempo:172, voices:{rd8:'bigroom',snare:'clap',hat:'shaker',bass:'acid',lead:'supersaw'},
+      rd8:[0,6,8,14], snare:[4,12], hat:[2,3,6,7,10,11,14,15], bass:[0,2,4,7,8,10,12,15], lead:[0,4,8,12]},
+    techstep:{tempo:176, voices:{rd8:'techno',snare:'rimshot',hat:'ride',bass:'acid',lead:'bell'},
+      rd8:[0,4,8,12], snare:[4,12], hat:[2,4,6,10,12,14], bass:[0,3,6,8,11,14], lead:[8]},
+
+    // Run DMC / boom-bap (Rick Rubin / Larry Smith era) — sparse + heavy, slow BPM
+    walkthisway:{tempo:114, voices:{rd8:'classic',snare:'classic',hat:'open',bass:'funk',lead:'pluck'},
+      rd8:[0,4,8,12], snare:[4,12], hat:[2,6,10,14], bass:[0,3,6,8,11,14], lead:[14]},
+    itstricky:{tempo:108, voices:{rd8:'classic',snare:'clap',hat:'shaker',bass:'sub',lead:'pluck'},
+      rd8:[0,3,8,10], snare:[4,12], hat:[2,6,10,14], bass:[0,3,8,11], lead:[6,14]},
+    suckermcs:{tempo:116, voices:{rd8:'classic',snare:'rimshot',hat:'classic',bass:'sub',lead:'pluck'},
+      rd8:[0,8], snare:[4,12], hat:[], bass:[0,3,8,11], lead:[]},
+    kingofrock:{tempo:120, voices:{rd8:'bigroom',snare:'clap',hat:'open',bass:'acid',lead:'supersaw'},
+      rd8:[0,4,8,12], snare:[4,12], hat:[0,2,4,6,8,10,12,14], bass:[0,4,8,12], lead:[0,6,8,14]}
   };
   document.getElementById('seqDemo').addEventListener('change',function(e){
     ensureAudio();
@@ -1430,7 +1481,9 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
     {n:'Starlab',          m:'stereo reverb',  v:'starlab', root:72, c:'#9ec8ff', why:'A galaxy of plate reverb I can play like an instrument. Space is not an effect for me, it is a place.'},
     {n:'Doepfer A-100',    m:'modular',        v:'doepfer', root:33, c:'#8ea2bd', why:'A whole second rack of plain Doepfer utility. Not glamorous, but it is the foundation everything else stands on.'},
     {n:'The Bench',        m:'Tektronix scope',v:'bench', root:0, c:'#6fd0a0', once:true, why:'A 100 MHz oscilloscope and a soldering iron. I do not just buy the sound, I open it up and build it myself.'},
-    {n:'Bébé Chérie',      m:'analog mixer',   v:'bebe', root:64, c:'#ff8ab0', why:'Hot pink, on an overturned milk crate, with COMP and BLISS. It is the most me object in the whole room.'}
+    {n:'Bébé Chérie',      m:'analog mixer',   v:'bebe', root:64, c:'#ff8ab0', why:'Hot pink, on an overturned milk crate, with COMP and BLISS. It is the most me object in the whole room.'},
+    {n:'Roland VT-4',      m:'voice transformer',v:'vt4', root:60, c:'#c98ad9', why:'Pitch, formant, harmony, vocoder in one box. When I want my own voice to become a choir or a machine, this is where it happens.'},
+    {n:'ADAM Audio',       m:'ribbon nearfields',v:'muse', root:48, c:'#c9b28a', why:'A matched pair on their own stands, gold ribbon tweeters that stay honest up top. Everything I make lands here first, and that ribbon is accurate enough to trust exactly what the SSL Fusion just did to the master. This is the room, hearing itself.'}
   ];
   var gearGrid=document.getElementById('gearGrid');
   gear.forEach(function(g){
@@ -1673,13 +1726,13 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
     <button class="ask-x" id="askClose" aria-label="Close">&times;</button>
   </div>
   <div class="ask-log" id="askLog">
-    <div class="ask-msg bot">Hey Foster. This is your studio, talking back. Ask me what you could build with any pieces in here, or correct anything the site got wrong (the monitors, whether there's a mic, the room treatment). What Gordon has me guessing at, you can settle. Where do you want to start?</div>
+    <div class="ask-msg bot">Hey Foster. This is your studio, talking back. Ask me what you could build with any pieces in here, or correct anything the site got wrong (whether there's a mic, the room treatment, anything I named wrong). What Gordon has me guessing at, you can settle. Where do you want to start?</div>
   </div>
   <div class="ask-chips" id="askChips">
     <button class="ask-chip" data-q="What's the fastest path to finishing a full track in here?">Finish a track fast</button>
     <button class="ask-chip" data-q="Give me a signal chain for a live drone + techno set.">A live set chain</button>
     <button class="ask-chip" data-q="What one piece is my studio missing most?">What am I missing?</button>
-    <button class="ask-chip" data-clarify="Let me correct the monitors: they are ">Fix the monitors</button>
+    <button class="ask-chip" data-clarify="Let me tell you about the room treatment: ">Fix the room</button>
   </div>
   <div class="ask-foot">
     <div class="ask-mode">
