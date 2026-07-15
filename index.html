@@ -217,6 +217,9 @@ input[type=range]{accent-color:var(--brass)}
 .knob .dial{position:absolute;left:50%;top:6px;width:3px;height:20px;background:var(--brass2);border-radius:3px;transform-origin:50% 22px;transform:translateX(-50%) rotate(0deg);box-shadow:0 0 8px var(--brass2)}
 .knob .kl{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
 .knob .kval{font-family:"Space Mono",monospace;font-size:10px;color:var(--brass2)}
+.knob .kin{width:56px;font-family:"Space Mono",monospace;font-size:10px;color:var(--ink);background:#0d1626;border:1px solid var(--line);border-radius:5px;text-align:center;padding:2px 0;cursor:text}
+.knob .kin:focus{outline:1px solid var(--brass2);border-color:var(--brass2)}
+.knob .kin::-webkit-inner-spin-button,.knob .kin::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .fmscope{width:100%;height:96px;border-radius:12px;background:linear-gradient(180deg,#060b14,#0e1930);border:1.5px solid var(--keyline);display:block;margin-bottom:14px}
 .keys{position:relative;height:120px;display:flex;gap:3px}
 .wkey{flex:1;background:linear-gradient(180deg,#f2e8cf,#d3c093);border:1px solid #4a3f2a;border-radius:0 0 7px 7px;cursor:pointer;position:relative;transition:.06s;min-width:26px}
@@ -460,19 +463,19 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
           </div>
           <div class="knobs" id="fmKnobs">
             <div class="knob" data-p="ratio" data-min="0.5" data-max="8" data-step="0.1" data-val="3.5" tabindex="0" role="slider" aria-label="FM ratio" aria-valuemin="0.5" aria-valuemax="8" aria-valuenow="3.5">
-              <div class="ring"><div class="dial"></div></div><div class="kl">Ratio</div><div class="kval"></div>
+              <div class="ring"><div class="dial"></div></div><div class="kl">Ratio</div><div class="kval"></div><input class="kin" type="number" step="0.1" min="0.5" max="8" aria-label="Type FM ratio">
             </div>
             <div class="knob" data-p="depth" data-min="0" data-max="12" data-step="0.1" data-val="4" tabindex="0" role="slider" aria-label="FM modulation depth" aria-valuemin="0" aria-valuemax="12" aria-valuenow="4">
-              <div class="ring"><div class="dial"></div></div><div class="kl">Depth</div><div class="kval"></div>
+              <div class="ring"><div class="dial"></div></div><div class="kl">Depth</div><div class="kval"></div><input class="kin" type="number" step="0.1" min="0" max="12" aria-label="Type FM depth">
             </div>
             <div class="knob" data-p="attack" data-min="0.001" data-max="1.2" data-step="0.01" data-val="0.01" tabindex="0" role="slider" aria-label="Amplitude attack" aria-valuemin="0.001" aria-valuemax="1.2" aria-valuenow="0.01">
-              <div class="ring"><div class="dial"></div></div><div class="kl">Attack</div><div class="kval"></div>
+              <div class="ring"><div class="dial"></div></div><div class="kl">Attack</div><div class="kval"></div><input class="kin" type="number" step="0.01" min="0.001" max="1.2" aria-label="Type attack time">
             </div>
             <div class="knob" data-p="release" data-min="0.05" data-max="3" data-step="0.01" data-val="0.9" tabindex="0" role="slider" aria-label="Amplitude release" aria-valuemin="0.05" aria-valuemax="3" aria-valuenow="0.9">
-              <div class="ring"><div class="dial"></div></div><div class="kl">Release</div><div class="kval"></div>
+              <div class="ring"><div class="dial"></div></div><div class="kl">Release</div><div class="kval"></div><input class="kin" type="number" step="0.01" min="0.05" max="3" aria-label="Type release time">
             </div>
             <div class="knob" data-p="cutoff" data-min="200" data-max="9000" data-step="10" data-val="3200" tabindex="0" role="slider" aria-label="Filter cutoff" aria-valuemin="200" aria-valuemax="9000" aria-valuenow="3200">
-              <div class="ring"><div class="dial"></div></div><div class="kl">Cutoff</div><div class="kval"></div>
+              <div class="ring"><div class="dial"></div></div><div class="kl">Cutoff</div><div class="kval"></div><input class="kin" type="number" step="10" min="200" max="9000" aria-label="Type filter cutoff">
             </div>
           </div>
         </div>
@@ -1392,7 +1395,7 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
 
   /* ============ FM VOICE ============ */
   var fmParams={ratio:3.5, depth:4, attack:0.01, release:0.9, cutoff:3200};
-  function fmSet(el, v){
+  function fmSet(el, v, skipInput){
     var min=+el.dataset.min, max=+el.dataset.max, p=el.dataset.p;
     v=Math.min(max,Math.max(min,v)); fmParams[p]=v;
     var norm=(v-min)/(max-min);
@@ -1400,11 +1403,13 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
     el.setAttribute('aria-valuenow', v.toFixed(p==='cutoff'?0:2));
     var out=el.querySelector('.kval');
     out.textContent = p==='cutoff' ? Math.round(v)+' Hz' : (p==='ratio'?v.toFixed(2)+':1':v.toFixed(2));
+    var inp=el.querySelector('.kin');
+    if(inp && !skipInput && document.activeElement!==inp){ inp.value = p==='cutoff'?Math.round(v):v.toFixed(2); }
   }
   document.querySelectorAll('#fmKnobs .knob').forEach(function(el){
     fmSet(el, +el.dataset.val);
     var startY=0, startV=0, dragging=false;
-    function down(e){ dragging=true; startY=(e.touches?e.touches[0].clientY:e.clientY); startV=fmParams[el.dataset.p]; e.preventDefault(); }
+    function down(e){ if(e.target.classList.contains('kin'))return; dragging=true; startY=(e.touches?e.touches[0].clientY:e.clientY); startV=fmParams[el.dataset.p]; e.preventDefault(); }
     function move(e){ if(!dragging)return; var y=(e.touches?e.touches[0].clientY:e.clientY);
       var min=+el.dataset.min,max=+el.dataset.max; fmSet(el, startV+(startY-y)/160*(max-min)); }
     function up(){ dragging=false; }
@@ -1412,11 +1417,21 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
     window.addEventListener('mousemove',move); window.addEventListener('touchmove',move,{passive:false});
     window.addEventListener('mouseup',up); window.addEventListener('touchend',up);
     el.addEventListener('keydown',function(e){
+      if(e.target.classList.contains('kin'))return;
       var step=+el.dataset.step*(e.shiftKey?10:5);
       if(e.key==='ArrowUp'||e.key==='ArrowRight'){ fmSet(el,fmParams[el.dataset.p]+step); e.preventDefault(); }
       if(e.key==='ArrowDown'||e.key==='ArrowLeft'){ fmSet(el,fmParams[el.dataset.p]-step); e.preventDefault(); }
     });
+    var kin=el.querySelector('.kin');
+    if(kin){
+      kin.value = p_init(el);
+      kin.addEventListener('mousedown',function(e){ e.stopPropagation(); });
+      kin.addEventListener('touchstart',function(e){ e.stopPropagation(); });
+      kin.addEventListener('change',function(){ var v=parseFloat(kin.value); if(!isNaN(v)){ fmSet(el, v, true); } });
+      kin.addEventListener('keydown',function(e){ e.stopPropagation(); if(e.key==='Enter'){ kin.blur(); } });
+    }
   });
+  function p_init(el){ var p=el.dataset.p, v=fmParams[p]; return p==='cutoff'?Math.round(v):v.toFixed(2); }
   function playFM(midi, when){
     ensureAudio(); var t=T(when); var f=ntof(midi);
     var car=ac.createOscillator(); car.type='sine'; car.frequency.value=f;
