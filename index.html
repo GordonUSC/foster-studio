@@ -293,6 +293,21 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
 }
 
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+/* the drop Foster loves — floating 低 button, evolving double bass drop */
+.dropfab{position:fixed;right:20px;bottom:20px;z-index:120;width:62px;height:62px;border-radius:50%;
+  border:1px solid rgba(232,185,85,.42);background:radial-gradient(circle at 35% 30%,#1b3358,#0a1220);
+  color:var(--brass2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  cursor:pointer;box-shadow:0 10px 30px -10px rgba(0,0,0,.8),0 0 22px -6px rgba(232,185,85,.5);
+  transition:transform .12s ease, box-shadow .3s ease}
+.dropfab .k{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:22px;line-height:1;font-weight:800}
+.dropfab span:last-child{font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft)}
+.dropfab:hover{box-shadow:0 10px 34px -8px rgba(0,0,0,.85),0 0 34px -4px rgba(232,185,85,.75)}
+.dropfab:active{transform:scale(.92)}
+.dropbloom{position:fixed;left:0;right:0;bottom:0;height:52vh;z-index:110;pointer-events:none;opacity:0;
+  background:radial-gradient(120% 90% at 50% 120%,rgba(232,185,85,.28),rgba(194,64,31,.14) 40%,transparent 70%)}
+body.dropping .dropbloom{animation:dropbloom 1.6s ease-out}
+@keyframes dropbloom{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){body.dropping .dropbloom{animation:none}}
 </style>
 </head>
 <body>
@@ -1809,6 +1824,114 @@ footer svg{width:30px;height:30px;margin:0 auto 10px;opacity:0.7}
       .finally(function(){send.disabled=false;input.focus();});
   }
   send.onclick=submit;
+})();
+</script>
+<button class="dropfab" id="dropfab" aria-label="feel the drop, evolving double bass drop"><span class="k">低</span><span>drop</span></button>
+<div class="dropbloom"></div>
+<script>
+/* the super deep drop — evolving DOUBLE bass drop, variety engine.
+   Each press fires two drops pulled from a shuffle-bag of distinct bass
+   characters (reese / wobble / neuro / tearout / sub dive / screech) and
+   escalates the deeper Foster leans on it. Never the same texture twice in a row. */
+(function(){
+  var b=document.getElementById('dropfab'); if(!b) return;
+  var AC=window.AudioContext||window.webkitAudioContext, ctx=null;
+  function noiseBuf(dur){ var bf=ctx.createBuffer(1,Math.max(1,(ctx.sampleRate*dur)|0),ctx.sampleRate),d=bf.getChannelData(0); for(var i=0;i<d.length;i++) d[i]=Math.random()*2-1; return bf; }
+  function playDrop(cfg){
+    if(!AC) return 0; cfg=cfg||{};
+    var mg=cfg.master||0.9, rdur=cfg.rdur!=null?cfg.rdur:0.9, wdur=cfg.wdur||2.8;
+    var dist=cfg.dist||4, Q=cfg.Q||12, depth=cfg.depth||1500, lfoA=cfg.lfoA||3, lfoB=cfg.lfoB||10;
+    var lfoShape=cfg.lfoShape||'sine', lpBase=cfg.lpBase||900;
+    var subHi=cfg.subHi||130, subLo=cfg.subLo||27, base=cfg.base||41.2, det=cfg.det||12, reeseG=cfg.reeseG||0.55;
+    try{
+      ctx=ctx||new AC(); if(ctx.state==='suspended') ctx.resume();
+      var t=ctx.currentTime;
+      var master=ctx.createGain(); master.gain.value=mg;
+      var comp=ctx.createDynamicsCompressor();
+      comp.threshold.value=-14;comp.knee.value=18;comp.ratio.value=14;comp.attack.value=0.002;comp.release.value=0.22;
+      master.connect(comp).connect(ctx.destination);
+      /* riser build */
+      var noise=ctx.createBufferSource(); noise.buffer=noiseBuf(rdur+0.2);
+      var bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=1.1;
+      bp.frequency.setValueAtTime(350,t); bp.frequency.exponentialRampToValueAtTime(9000,t+rdur);
+      var ng=ctx.createGain(); ng.gain.setValueAtTime(0.0001,t); ng.gain.exponentialRampToValueAtTime(0.32,t+rdur); ng.gain.exponentialRampToValueAtTime(0.0001,t+rdur+0.06);
+      noise.connect(bp).connect(ng).connect(master); noise.start(t); noise.stop(t+rdur+0.15);
+      var it=t+rdur, wend=it+wdur;
+      /* sub 808 dive */
+      var sub=ctx.createOscillator(), sg=ctx.createGain();
+      sub.type='sine'; sub.frequency.setValueAtTime(subHi,it); sub.frequency.exponentialRampToValueAtTime(subLo,it+0.45);
+      sg.gain.setValueAtTime(0.0001,it); sg.gain.exponentialRampToValueAtTime(1.0,it+0.015); sg.gain.exponentialRampToValueAtTime(0.34,it+0.5);
+      sg.gain.setValueAtTime(0.34,wend-0.3); sg.gain.exponentialRampToValueAtTime(0.0001,wend);
+      sub.connect(sg).connect(master); sub.start(it); sub.stop(wend+0.05);
+      /* impact click */
+      var pk=ctx.createOscillator(), pg=ctx.createGain();
+      pk.type='triangle'; pk.frequency.setValueAtTime(200,it); pk.frequency.exponentialRampToValueAtTime(55,it+0.14);
+      pg.gain.setValueAtTime(0.8,it); pg.gain.exponentialRampToValueAtTime(0.0001,it+0.2);
+      pk.connect(pg).connect(master); pk.start(it); pk.stop(it+0.22);
+      /* wub reese: detuned layers -> distortion -> resonant LP with accelerating LFO */
+      var shaper=ctx.createWaveShaper(), cv=new Float32Array(2048);
+      for(var j=0;j<2048;j++){ var x=j/2048*2-1; cv[j]=Math.tanh(x*dist); } shaper.curve=cv; shaper.oversample='4x';
+      var lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.Q.value=Q; lp.frequency.value=lpBase;
+      var reese=ctx.createGain(); reese.gain.value=0.0;
+      var fs, ds, tys;
+      if(cfg.layers){ fs=[]; ds=[]; tys=[]; for(var li=0;li<cfg.layers.length;li++){ fs.push(base*cfg.layers[li][0]); tys.push(cfg.layers[li][1]); ds.push(cfg.layers[li][2]); } }
+      else { fs=[base,base,base*2]; ds=[-det,det+1,0]; tys=['sawtooth','sawtooth','sawtooth']; }
+      if(cfg.grit){ fs.push(base*4); ds.push(-3); tys.push('square'); }
+      for(var k=0;k<fs.length;k++){ var o=ctx.createOscillator(); o.type=tys[k]||'sawtooth'; o.frequency.value=fs[k]; o.detune.value=ds[k]; o.connect(reese); o.start(it); o.stop(wend+0.05); }
+      reese.connect(shaper).connect(lp).connect(master);
+      reese.gain.setValueAtTime(0.0001,it); reese.gain.exponentialRampToValueAtTime(reeseG,it+0.02);
+      reese.gain.setValueAtTime(reeseG,wend-0.25); reese.gain.exponentialRampToValueAtTime(0.0001,wend);
+      var lfo=ctx.createOscillator(); lfo.type=lfoShape;
+      lfo.frequency.setValueAtTime(lfoA,it); lfo.frequency.linearRampToValueAtTime(lfoB,wend);
+      var lfoDepth=ctx.createGain(); lfoDepth.gain.value=depth;
+      lfo.connect(lfoDepth).connect(lp.frequency); lfo.start(it); lfo.stop(wend+0.05);
+      return {impact:rdur, wub:wdur};
+    }catch(e){ return 0; }
+  }
+  function bloom(){ document.body.classList.remove('dropping'); void document.body.offsetWidth; document.body.classList.add('dropping'); setTimeout(function(){document.body.classList.remove('dropping');},1700); }
+  var PAL=[
+    {n:'reese',   c:{}},
+    {n:'wobble',  c:{lfoShape:'square', lfoA:2, lfoB:6, dist:5, Q:10,
+                     layers:[[1,'sawtooth',-14],[1,'square',12],[2,'sawtooth',0]]}},
+    {n:'neuro',   c:{dist:8, Q:16, depth:2100, lfoA:5, lfoB:16, base:36.7, det:18, grit:true}},
+    {n:'tearout', c:{lpBase:1500, lfoShape:'square', lfoA:6, lfoB:13, dist:7, Q:14, depth:1800,
+                     layers:[[1,'sawtooth',-16],[2,'square',10],[2,'sawtooth',-8]]}},
+    {n:'sub dive',c:{dist:2, Q:6, depth:520, lfoA:2, lfoB:4, reeseG:0.3, lpBase:120,
+                     subHi:150, subLo:24, layers:[[1,'sine',0],[1,'triangle',6]]}},
+    {n:'screech', c:{base:49, dist:9, Q:18, depth:2400, lpBase:1200, lfoShape:'sawtooth',
+                     lfoA:5, lfoB:18, det:22, grit:true}}
+  ];
+  var bag=[], intensity=0;
+  function nextPal(){
+    if(!bag.length){ bag=PAL.map(function(_,i){return i;});
+      for(var i=bag.length-1;i>0;i--){ var jj=(Math.random()*(i+1))|0, tmp=bag[i]; bag[i]=bag[jj]; bag[jj]=tmp; } }
+    return PAL[bag.pop()];
+  }
+  function evolve(base, amt){
+    var c={}; for(var k in base) c[k]=base[k];
+    c.dist=(base.dist||4)*(1+0.6*amt);
+    c.Q=(base.Q||12)*(1+0.35*amt);
+    c.depth=(base.depth||1500)*(1+0.5*amt);
+    c.lfoB=(base.lfoB||10)*(1+0.3*amt);
+    c.reeseG=Math.min(0.72,(base.reeseG||0.55)*(1+0.22*amt));
+    c.master=Math.min(1.0,(base.master||0.9)+0.05*amt);
+    c.subLo=Math.max(20,(base.subLo||27)-3*amt);
+    if(amt>0.55) c.grit=true;
+    return c;
+  }
+  function drop(){
+    intensity=Math.min(1, intensity+0.16);
+    var A=nextPal(), B=nextPal();
+    var wob=1+(Math.random()*0.06-0.03);
+    var cA=evolve(A.c, 0.15+0.35*intensity); cA.rdur=0.9;  cA.wdur=2.6; cA.base=(A.c.base||41.2)*wob;
+    var cB=evolve(B.c, 0.55+0.45*intensity); cB.rdur=0.62; cB.wdur=3.4; cB.base=(B.c.base||41.2)*wob;
+    b.setAttribute('aria-label','double drop: '+A.n+' into '+B.n);
+    var r=playDrop(cA); if(!r){ bloom(); return; }
+    setTimeout(bloom, r.impact*1000);
+    var gap=(r.impact + r.wub + 0.12)*1000;
+    setTimeout(function(){ var r2=playDrop(cB); if(r2){ setTimeout(bloom, r2.impact*1000); } }, gap);
+  }
+  b.addEventListener('click',drop);
 })();
 </script>
 </body>
