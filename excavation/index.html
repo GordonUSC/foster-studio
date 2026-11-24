@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>The Dig · FANGSPEARE</title>
+<meta name="description" content="Excavation 02. Strike on the beat of OLD ONES by FANGSPEARE. Reach the Old One. Do not follow us south.">
+<meta property="og:title" content="THE DIG · Excavation 02 · FANGSPEARE">
+<meta property="og:description" content="Strike on the beat. Reach the Old One. Earn your Specimen Card.">
+<meta property="og:image" content="assets/plate.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bone:#efe3c8;--ink:#0b1114;--ice:#9fe3ff;--red:#ff2d2d;--teal:#0c2a33}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#05090b;color:var(--bone);font-family:'Special Elite',Courier,monospace;overflow:hidden;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:max(18px,env(safe-area-inset-top)) 18px max(18px,env(safe-area-inset-bottom))}
+.screen.on{display:flex}
+#title{background:linear-gradient(#05090bcc,#05090b55 40%,#05090bee),url(assets/camp.jpg) center/cover}
+.note{max-width:420px;width:100%;background:#efe3c8f2;color:#1a1410;padding:22px 20px 20px;border-radius:4px;box-shadow:0 12px 40px #000a;transform:rotate(-1deg);font-size:17px;line-height:1.5}
+.note h1{font:700 30px/1 Oswald,sans-serif;letter-spacing:.06em;margin-bottom:4px}
+.note .sub{font-size:13px;letter-spacing:.14em;opacity:.7;margin-bottom:12px}
+.note p{margin:6px 0}
+.note input{width:100%;margin:12px 0 4px;padding:10px;font:16px 'Special Elite',monospace;border:1px dashed #1a1410;background:#fff8;color:#1a1410;border-radius:3px}
+.btn{display:block;width:100%;margin-top:12px;padding:15px 12px;border:0;border-radius:4px;background:#0b1114;color:var(--bone);font:700 20px Oswald,sans-serif;letter-spacing:.08em;text-align:center;text-decoration:none;cursor:pointer}
+.btn.red{background:var(--red);color:#fff}
+.btn.ghost{background:transparent;color:var(--bone);border:1px solid #efe3c866}
+.small{font-size:12px;opacity:.75;margin-top:10px;text-align:center}
+#play{padding:0;justify-content:flex-start}
+#shaft{position:absolute;inset:0;background:url(assets/shaft.jpg) center 0/auto 175% no-repeat;background-color:#020507;transition:background-position .25s ease-out}
+#vign{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 35%,#000c 100%);pointer-events:none}
+#hud{position:absolute;top:max(12px,env(safe-area-inset-top));left:14px;right:14px;display:flex;justify-content:space-between;font:700 15px Oswald;letter-spacing:.08em;z-index:3}
+#hud b{display:block;font-size:30px;color:#fff}
+#bar{position:absolute;left:14px;right:14px;top:calc(max(12px,env(safe-area-inset-top)) + 62px);height:6px;background:#ffffff22;border-radius:3px;z-index:3}
+#bar i{display:block;height:100%;width:0;background:var(--ice);border-radius:3px;transition:width .2s}
+#stage{position:absolute;left:50%;top:56%;width:0;height:0;z-index:2}
+.ring{position:absolute;border-radius:50%;left:0;top:0;transform:translate(-50%,-50%)}
+#target{width:150px;height:150px;border:4px solid var(--bone);box-shadow:0 0 24px #9fe3ff88, inset 0 0 24px #9fe3ff55}
+#pulse{width:150px;height:150px;border:3px solid var(--ice);opacity:.9}
+#core{width:56px;height:56px;background:radial-gradient(#fff,#9fe3ff 40%,#0000 70%)}
+#judge{position:absolute;left:50%;top:38%;transform:translateX(-50%);font:700 34px Oswald;letter-spacing:.1em;z-index:3;text-shadow:0 2px 12px #000;opacity:0;transition:opacity .35s}
+#combo{position:absolute;left:50%;top:calc(56% + 100px);transform:translateX(-50%);font:700 18px Oswald;letter-spacing:.12em;z-index:3;opacity:.85}
+#hint{position:absolute;bottom:max(24px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;font-size:14px;z-index:3;opacity:.8}
+.shake{animation:sh .14s}
+@keyframes sh{25%{transform:translate(3px,-2px)}50%{transform:translate(-3px,2px)}75%{transform:translate(2px,1px)}}
+.chip{position:absolute;width:6px;height:6px;background:#dff6ff;border-radius:1px;z-index:2;pointer-events:none}
+#flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:9;transition:opacity .6s}
+#reveal{background:#000;padding:0}
+#reveal .img{position:absolute;inset:0;background:url(assets/reveal.jpg) center top/cover;animation:zoom 6s ease-out forwards}
+@keyframes zoom{from{transform:scale(1.25);filter:brightness(.2)}to{transform:scale(1);filter:brightness(1)}}
+#reveal .eyes{position:absolute;inset:0;background:radial-gradient(circle at 50% 14%,#ff2d2d55,transparent 25%);animation:glow 1.3s ease-in-out infinite alternate;mix-blend-mode:screen}
+@keyframes glow{from{opacity:.3}to{opacity:1}}
+#reveal h2{position:absolute;bottom:18%;left:0;right:0;text-align:center;font:700 34px Oswald;letter-spacing:.1em;text-shadow:0 2px 16px #000;opacity:0;animation:fade 1s 2.2s forwards}
+@keyframes fade{to{opacity:1}}
+#result{background:linear-gradient(#05090bf2,#05090bf2),url(assets/shaft.jpg) center bottom/cover;justify-content:flex-start;overflow-y:auto;padding-top:max(22px,env(safe-area-inset-top))}
+#result h2{font:700 26px Oswald;letter-spacing:.1em;margin:6px 0 2px;text-align:center}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:420px;margin:12px 0}
+.stats div{background:#ffffff0d;border:1px solid #ffffff1f;border-radius:4px;padding:10px;text-align:center;font-size:12px;letter-spacing:.08em}
+.stats b{display:block;font:700 24px Oswald;color:#fff;letter-spacing:.04em}
+.mult{width:100%;max-width:420px;text-align:center;font:700 20px Oswald;letter-spacing:.08em;color:var(--red);margin:2px 0 8px}
+#cardimg{width:100%;max-width:420px;border-radius:4px;box-shadow:0 10px 40px #000;margin-top:6px}
+.wrap{width:100%;max-width:420px}
+</style>
+</head>
+<body>
+<section id="title" class="screen on">
+  <div class="note">
+    <h1>THE DIG</h1>
+    <div class="sub">FANGSPEARE EXPEDITION · EXCAVATION 02</div>
+    <p>The drill only bites on the beat.</p>
+    <p>Strike with the music. Reach 1,000 m. The faster you get there, the bigger your bonus.</p>
+    <p>What you recover is yours: a numbered Specimen Card.</p>
+    <input id="agent" maxlength="16" placeholder="Your field name (optional)" autocomplete="off">
+    <button class="btn" id="go">BEGIN THE DIG</button>
+    <div class="small" id="load">Sound on. Music: OLD ONES by FANGSPEARE.</div>
+    <a class="btn ghost" style="color:#1a1410;border-color:#1a141055" href="assets/transmission.mp4" target="_blank" rel="noopener">HEAR THE TRANSMISSION FIRST</a>
+  </div>
+</section>
+
+<section id="play" class="screen">
+  <div id="shaft"></div><div id="vign"></div>
+  <div id="hud"><div>DEPTH<b id="depth">0 m</b></div><div style="text-align:right">TIME<b id="time">0.0</b></div></div>
+  <div id="bar"><i id="barf"></i></div>
+  <div id="judge"></div>
+  <div id="stage"><div class="ring" id="target"></div><div class="ring" id="pulse"></div><div class="ring" id="core"></div></div>
+  <div id="combo"></div>
+  <div id="hint">Tap anywhere when the ring meets the circle</div>
+</section>
+
+<section id="reveal" class="screen"><div class="img"></div><div class="eyes"></div><h2>SPECIMEN 02 RECOVERED</h2></section>
+
+<section id="result" class="screen">
+  <div class="wrap">
+    <h2 id="rtitle">SPECIMEN 02 RECOVERED</h2>
+    <div class="stats">
+      <div>TIME TO 1,000 m<b id="rtime"></b></div>
+      <div>ACCURACY<b id="racc"></b></div>
+      <div>BEST COMBO<b id="rcombo"></b></div>
+      <div>SCORE<b id="rscore"></b></div>
+    </div>
+    <div class="mult" id="rmult"></div>
+    <img id="cardimg" alt="Your FANGSPEARE Specimen Card">
+    <div class="small">Press and hold the card to save it. It's yours.</div>
+    <button class="btn red" id="save">SAVE MY SPECIMEN CARD</button>
+    <a class="btn" href="https://www.instagram.com/fangspeare/" target="_blank" rel="noopener">FOLLOW FANGSPEARE</a>
+    <a class="btn ghost" href="https://fangspeare.com/" target="_blank" rel="noopener">FANGSPEARE.COM</a>
+    <a class="btn ghost" href="assets/specimen-02-poster.jpg" target="_blank" rel="noopener">FULL-SIZE FIELD POSTER</a>
+    <button class="btn ghost" id="again">DIG AGAIN</button>
+    <div class="small">Do not follow us south.</div>
+  </div>
+</section>
+<div id="flash"></div>
+
+<script>
+(() => {
+const GOAL = 1000, $ = id => document.getElementById(id);
+const AC = window.AudioContext || window.webkitAudioContext;
+let ctx, buf = {}, beats = [], startOff = 30, T0 = 0, src, playing = false, raf;
+let depth = 0, hits = 0, taps = 0, perfect = 0, combo = 0, best = 0, used = new Set(), tStart = 0, tEnd = 0;
+
+async function loadAll() {
+  const b = await (await fetch('assets/beats.json')).json(); beats = b.beats; startOff = b.start;
+  const names = ['old-ones', 'pick', 'crack'];
+  await Promise.all(names.map(async n => {
+    const ab = await (await fetch('assets/' + n + '.mp3')).arrayBuffer();
+    buf[n] = await new Promise((res, rej) => ctx.decodeAudioData(ab, res, rej));
+  }));
+}
+function play(name, when = 0, gain = 1) {
+  const s = ctx.createBufferSource(); s.buffer = buf[name];
+  const g = ctx.createGain(); g.gain.value = gain; s.connect(g).connect(ctx.destination); s.start(when); return s;
+}
+const songT = () => ctx.currentTime - T0 + startOff;
+function nearest(t) { let lo = 0, hi = beats.length - 1; while (hi - lo > 1) { const m = (lo + hi) >> 1; beats[m] < t ? lo = m : hi = m; } return Math.abs(beats[lo] - t) < Math.abs(beats[hi] - t) ? lo : hi; }
+
+$('go').onclick = async () => {
+  $('go').disabled = true; $('load').textContent = 'Lowering the drill...';
+  try { ctx = ctx || new AC(); await ctx.resume(); if (!buf['old-ones']) await loadAll(); }
+  catch (e) { $('load').textContent = 'Could not load the audio. Try again with sound on.'; $('go').disabled = false; return; }
+  start();
+};
+function start() {
+  depth = hits = taps = perfect = combo = best = 0; used = new Set();
+  $('title').classList.remove('on'); $('result').classList.remove('on'); $('reveal').classList.remove('on'); $('play').classList.add('on');
+  T0 = ctx.currentTime + 0.25; src = play('old-ones', T0, 0.95);
+  src.start && 0; tStart = T0; playing = true; update(); loop();
+}
+function judge(txt, col) { const j = $('judge'); j.textContent = txt; j.style.color = col; j.style.opacity = 1; clearTimeout(j._t); j._t = setTimeout(() => j.style.opacity = 0, 380); }
+function chips() {
+  const st = $('stage').getBoundingClientRect();
+  for (let i = 0; i < 9; i++) {
+    const c = document.createElement('div'); c.className = 'chip'; document.body.appendChild(c);
+    const a = Math.random() * 6.28, d = 60 + Math.random() * 90;
+    c.style.left = st.left + 'px'; c.style.top = st.top + 'px';
+    c.animate([{ transform: 'translate(0,0)', opacity: 1 }, { transform: `translate(${Math.cos(a) * d}px,${Math.sin(a) * d + 40}px) rotate(${a * 90}deg)`, opacity: 0 }], { duration: 520, easing: 'cubic-bezier(.2,.7,.4,1)' }).onfinish = () => c.remove();
+  }
+}
+function tap(e) {
+  if (!playing) return; e.preventDefault();
+  const t = songT(), i = nearest(t), err = Math.abs(beats[i] - t); taps++;
+  if (err <= 0.15 && !used.has(i)) {
+    used.add(i); hits++; combo++; best = Math.max(best, combo);
+    const mult = combo >= 16 ? 3 : combo >= 8 ? 2 : 1;
+    const gain = (err <= 0.07 ? (perfect++, 10) : 7) * mult;
+    depth = Math.min(GOAL, depth + gain);
+    judge(err <= 0.07 ? 'PERFECT' : 'GOOD', err <= 0.07 ? '#9fe3ff' : '#efe3c8');
+    play('pick', 0, err <= 0.07 ? 1 : .7); chips();
+    $('play').classList.remove('shake'); void $('play').offsetWidth; $('play').classList.add('shake');
+    if (navigator.vibrate) navigator.vibrate(18);
+  } else { combo = 0; judge('MISS', '#ff2d2d'); }
+  update();
+  if (depth >= GOAL) finish();
+}
+['pointerdown'].forEach(ev => $('play').addEventListener(ev, tap, { passive: false }));
+document.addEventListener('keydown', e => { if (e.code === 'Space' && playing) tap(e); });
+function update() {
+  $('depth').textContent = Math.round(depth).toLocaleString() + ' m';
+  $('barf').style.width = (depth / GOAL * 100) + '%';
+  const m = combo >= 16 ? 'x3' : combo >= 8 ? 'x2' : '';
+  $('combo').textContent = combo > 1 ? `COMBO ${combo} ${m}` : '';
+  $('shaft').style.backgroundPosition = `center ${Math.min(100, depth / GOAL * 100)}%`;
+}
+function loop() {
+  if (!playing) return;
+  const t = songT();
+  $('time').textContent = Math.max(0, ctx.currentTime - tStart).toFixed(1);
+  let i = beats.findIndex(b => b > t); if (i < 0) { fail(); return; }
+  const prev = i > 0 ? beats[i - 1] : beats[0] - 0.65, p = Math.min(1, Math.max(0, (t - prev) / (beats[i] - prev)));
+  const s = 2.3 - 1.3 * p; $('pulse').style.transform = `translate(-50%,-50%) scale(${s})`; $('pulse').style.opacity = .35 + .65 * p;
+  $('core').style.transform = `translate(-50%,-50%) scale(${1 + 0.25 * Math.max(0, 1 - Math.abs(t - beats[nearest(t)]) / .12)})`;
+  if (AUTO) { const k = nearest(t); if (Math.abs(beats[k] - t) < 0.03 && !used.has(k)) tap({ preventDefault() {} }); }
+  raf = requestAnimationFrame(loop);
+}
+const AUTO = location.hash === '#autoplay-qa';
+function fail() { playing = false; cancelAnimationFrame(raf); try { src.stop(); } catch (e) {}; $('play').classList.remove('on'); $('result').classList.add('on'); $('rtitle').textContent = 'THE ICE HELD. DIG AGAIN?'; $('rtime').textContent = '--'; $('racc').textContent = acc() + '%'; $('rcombo').textContent = best; $('rscore').textContent = Math.round(depth); $('rmult').textContent = `${Math.round(depth)} m of 1,000 m`; $('cardimg').style.display = 'none'; $('save').style.display = 'none'; }
+const acc = () => taps ? Math.round(hits / taps * 100) : 0;
+function finish() {
+  playing = false; tEnd = ctx.currentTime - tStart; cancelAnimationFrame(raf);
+  const g = ctx.createGain(); // let the music ring under the reveal
+  play('crack', 0, 1); if (navigator.vibrate) navigator.vibrate([60, 40, 160]);
+  const f = $('flash'); f.style.transition = 'none'; f.style.opacity = 1; requestAnimationFrame(() => { f.style.transition = 'opacity 1.2s'; f.style.opacity = 0; });
+  $('play').classList.remove('on'); $('reveal').classList.add('on');
+  setTimeout(results, 4200);
+}
+function multFor(t) { return t < 30 ? [2, 'LEGENDARY'] : t < 40 ? [1.5, 'SWIFT'] : t < 55 ? [1.2, 'STEADY'] : [1, 'PATIENT']; }
+function results() {
+  try { src.stop(ctx.currentTime + 1.5); } catch (e) {}
+  const [m, label] = multFor(tEnd), a = acc(), score = Math.round((1000 + perfect * 25 + best * 10) * (a / 100) * m);
+  $('reveal').classList.remove('on'); $('result').classList.add('on'); $('rtitle').textContent = 'SPECIMEN 02 RECOVERED';
+  $('rtime').textContent = tEnd.toFixed(1) + 's'; $('racc').textContent = a + '%'; $('rcombo').textContent = best; $('rscore').textContent = score.toLocaleString();
+  $('rmult').textContent = `SPEED BONUS x${m} · ${label}`;
+  $('cardimg').style.display = ''; $('save').style.display = '';
+  makeCard(score, a, label);
+}
+function makeCard(score, a, label) {
+  const img = new Image(); img.src = 'assets/plate.jpg';
+  img.onload = () => {
+    const W = 1080, H = 1620, c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+    x.fillStyle = '#e9dcbf'; x.fillRect(0, 0, W, H);
+    x.drawImage(img, 120, 190, 840, 1260);
+    x.strokeStyle = '#3a2f22'; x.lineWidth = 3; x.strokeRect(60, 60, W - 120, H - 120);
+    x.fillStyle = '#1a1410'; x.textAlign = 'center';
+    x.font = '700 46px Oswald, sans-serif'; x.fillText('FANGSPEARE EXPEDITION', W / 2, 128);
+    x.font = '26px "Special Elite", monospace'; x.fillText('EXCAVATION 02 · SPECIMEN: OLD ONE', W / 2, 166);
+    const agent = ($('agent').value || 'FIELD AGENT').toUpperCase().replace(/[^A-Z0-9 .'-]/g, '').slice(0, 16) || 'FIELD AGENT';
+    const no = String((score * 7919 + Math.round(tEnd * 1000)) % 10000).padStart(4, '0');
+    x.font = '30px "Special Elite", monospace';
+    x.fillText(`RECOVERED BY ${agent} · No. ${no}`, W / 2, 1500);
+    x.font = '24px "Special Elite", monospace';
+    x.fillText(`1,000 m IN ${tEnd.toFixed(1)}s · ${a}% · ${label} · SCORE ${score.toLocaleString()}`, W / 2, 1540);
+    x.fillStyle = '#8f1d1d'; x.font = '22px "Special Elite", monospace'; x.fillText('DO NOT FOLLOW US SOUTH', W / 2, 1576);
+    x.save(); x.translate(860, 300); x.rotate(-0.2); x.strokeStyle = '#a3171799'; x.lineWidth = 5; x.strokeRect(-110, -36, 220, 72);
+    x.fillStyle = '#a31717bb'; x.font = '700 34px Oswald'; x.fillText('RECOVERED', 0, 12); x.restore();
+    const url = c.toDataURL('image/jpeg', 0.9); $('cardimg').src = url;
+    $('save').onclick = () => { const l = document.createElement('a'); l.href = url; l.download = `FANGSPEARE-Specimen-02-No${no}.jpg`; document.body.appendChild(l); l.click(); l.remove(); };
+  };
+}
+$('again').onclick = () => start();
+})();
+</script>
+</body>
+</html>
