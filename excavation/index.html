@@ -135,9 +135,9 @@ function makeCard(score, t, label) {
     x.font = '26px "Special Elite", monospace'; x.fillText('EXCAVATION 02 · SPECIMEN: OLD ONE', W / 2, 166);
     const agent = ($('agent').value || 'FIELD AGENT').toUpperCase().replace(/[^A-Z0-9 .'-]/g, '').slice(0, 16) || 'FIELD AGENT';
     const no = String((score * 7919 + Math.round(t * 1000)) % 10000).padStart(4, '0');
-    x.font = '30px "Special Elite", monospace'; x.fillText(`FREED BY ${agent} · No. ${no}`, W / 2, 1500);
-    x.font = '24px "Special Elite", monospace'; x.fillText(`5 ZONES IN ${t.toFixed(1)}s · ${label} · SCORE ${score.toLocaleString()}`, W / 2, 1540);
-    x.fillStyle = '#8f1d1d'; x.font = '22px "Special Elite", monospace'; x.fillText('DO NOT FOLLOW US SOUTH', W / 2, 1576);
+    x.font = '30px "Special Elite", monospace'; x.fillText(`FREED BY ${agent} · No. ${no}`, W / 2, 1486);
+    x.font = '24px "Special Elite", monospace'; x.fillText(`5 ZONES IN ${t.toFixed(1)}s · ${label} · SCORE ${score.toLocaleString()}`, W / 2, 1520);
+    x.fillStyle = '#8f1d1d'; x.font = '22px "Special Elite", monospace'; x.fillText('OLD ONES BY FANGSPEARE · OUT 12/2 · DO NOT FOLLOW US SOUTH', W / 2, 1548);
     x.save(); x.translate(860, 300); x.rotate(-0.2); x.strokeStyle = '#a3171799'; x.lineWidth = 5; x.strokeRect(-110, -36, 220, 72);
     x.fillStyle = '#a31717bb'; x.font = '700 34px Oswald'; x.fillText('RECOVERED', 0, 12); x.restore();
     const url = c.toDataURL('image/jpeg', 0.9); $('cardimg').src = url;
