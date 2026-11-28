@@ -1,0 +1,166 @@
+<!doctype html>
+<!-- STYLE: Expedition field note over a live Unity scene (typewriter Special Elite on bone paper, Oswald stamps, the frozen Old One and the shoggoth as the whole background) | WHY: it continues the FANGSPEARE Antarctic canon Foster already built (Specimen 02, Dig Site 02 transmission), so v2 reads as the same expedition and the game itself is the visual | ALT: a Fukuda-style bold graphic poster title card (flat ice-blue and black figure-ground), rejected because it would break the canon he approved this morning -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>The Dig v3 · FANGSPEARE</title>
+<meta name="description" content="Excavation 02. Tap the ice on the bassline of OLD ONES by FANGSPEARE. Free the Old One before the shoggoth closes in.">
+<meta property="og:title" content="THE DIG · Excavation 02 · FANGSPEARE">
+<meta property="og:description" content="Five zones of ice. One Old One. The shoggoth is coming.">
+<meta property="og:image" content="../assets/plate.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bone:#efe3c8;--ice:#9fe3ff;--red:#ff2d2d}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#000;color:var(--bone);font-family:'Special Elite',Courier,monospace;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+#unity-canvas{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;display:block;background:#000}
+.layer{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:max(18px,env(safe-area-inset-top)) 18px max(18px,env(safe-area-inset-bottom));z-index:5}
+.layer.on{display:flex}
+#title{background:linear-gradient(#000a,#0005 45%,#000d)}
+.note{max-width:420px;width:100%;background:#efe3c8f2;color:#1a1410;padding:22px 20px 20px;border-radius:4px;box-shadow:0 12px 40px #000a;transform:rotate(-1deg);font-size:17px;line-height:1.5}
+.note h1{font:700 30px/1 Oswald,sans-serif;letter-spacing:.06em;margin-bottom:4px}
+.note .sub{font-size:13px;letter-spacing:.14em;opacity:.7;margin-bottom:12px}
+.note p{margin:6px 0}
+.note input{width:100%;margin:12px 0 4px;padding:10px;font:16px 'Special Elite',monospace;border:1px dashed #1a1410;background:#fff8;color:#1a1410;border-radius:3px}
+.btn{display:block;width:100%;margin-top:12px;padding:15px 12px;border:0;border-radius:4px;background:#0b1114;color:var(--bone);font:700 20px Oswald,sans-serif;letter-spacing:.08em;text-align:center;text-decoration:none;cursor:pointer}
+.btn:disabled{opacity:.55}
+.btn.red{background:var(--red);color:#fff}
+.btn.ghost{background:transparent;color:var(--bone);border:1px solid #efe3c866}
+.small{font-size:12px;opacity:.75;margin-top:10px;text-align:center}
+#result{background:#05090bf0;justify-content:flex-start;overflow-y:auto;touch-action:pan-y;padding-top:max(22px,env(safe-area-inset-top))}
+#result h2{font:700 26px Oswald;letter-spacing:.1em;margin:6px 0 2px;text-align:center}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin:12px 0}
+.stats div{background:#ffffff0d;border:1px solid #ffffff1f;border-radius:4px;padding:10px;text-align:center;font-size:12px;letter-spacing:.08em}
+.stats b{display:block;font:700 24px Oswald;color:#fff;letter-spacing:.04em}
+.mult{text-align:center;font:700 20px Oswald;letter-spacing:.08em;color:var(--red);margin:2px 0 8px}
+#cardimg{width:100%;border-radius:4px;box-shadow:0 10px 40px #000;margin-top:6px}
+.wrap{width:100%;max-width:420px}
+#flare{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(86px,calc(env(safe-area-inset-bottom) + 76px));z-index:4;display:none;width:76px;height:76px;border-radius:50%;border:2px solid #ffb36b;background:radial-gradient(#ff7a2a,#8f1d1d 70%);color:#fff;font:700 13px/1.05 Oswald,sans-serif;letter-spacing:.06em;box-shadow:0 0 22px #ff6a2a88;touch-action:manipulation}
+#flare b{display:block;font-size:24px}
+#flare:disabled{opacity:.35;box-shadow:none}
+#flare.on{display:block}
+#rec{position:fixed;left:12px;right:12px;bottom:12px;z-index:6;display:none;background:#efe3c8f2;color:#1a1410;padding:10px;border-radius:4px;font-size:13px}
+#rec.on{display:block}
+#rec textarea{width:100%;height:70px;font:12px monospace}
+</style>
+</head>
+<body>
+<canvas id="unity-canvas" tabindex="-1"></canvas>
+
+<section id="title" class="layer on">
+  <div class="note">
+    <h1>THE DIG</h1>
+    <div class="sub">FANGSPEARE EXPEDITION · EXCAVATION 02</div>
+    <p>The Old One is locked in five zones of ice.</p>
+    <p>Tap the ice on the <b>bassline</b>. Right on the note is a PERFECT strike, close is GOOD, and every tap still cracks it.</p>
+    <p>Catch a quick 2 or 3 note run for a COMBO. Two flares freeze the shoggoth for 5.6 seconds.</p>
+    <p>Free all five and the Old One takes care of the rest.</p>
+    <input id="agent" maxlength="16" placeholder="Your field name (optional)" autocomplete="off">
+    <button class="btn" id="go" disabled>THAWING THE DIG SITE...</button>
+    <div class="small" id="load">Sound on. Music: OLD ONES by FANGSPEARE.</div>
+    <a class="btn ghost" style="color:#1a1410;border-color:#1a141055" href="../assets/transmission.mp4" target="_blank" rel="noopener">HEAR THE TRANSMISSION FIRST</a>
+  </div>
+</section>
+
+<button id="flare" aria-label="Throw a flare"><b>2</b>FLARE</button>
+<div id="rec"><div>RECORD MODE: tap the bassline from 0:27 to 0:55. Your taps (song seconds):</div><textarea id="rectxt" readonly></textarea><button class="btn" id="reccopy">COPY MY BASSLINE</button></div>
+
+<section id="result" class="layer">
+  <div class="wrap">
+    <h2 id="rtitle">SPECIMEN 02 RECOVERED</h2>
+    <div class="stats">
+      <div>TIME TO FREE IT<b id="rtime"></b></div>
+      <div>ZONES FREED<b id="rzones"></b></div>
+      <div>ON THE BASS<b id="rbeat"></b></div>
+      <div>SCORE<b id="rscore"></b></div>
+    </div>
+    <div class="mult" id="rmult"></div>
+    <img id="cardimg" alt="Your FANGSPEARE Specimen Card">
+    <div class="small" id="cardnote">Press and hold the card to save it. It's yours.</div>
+    <button class="btn red" id="save">SAVE MY SPECIMEN CARD</button>
+    <button class="btn" id="again">DIG AGAIN</button>
+    <a class="btn" href="https://www.instagram.com/fangspeare/" target="_blank" rel="noopener">FOLLOW FANGSPEARE</a>
+    <a class="btn ghost" href="https://fangspeare.com/" target="_blank" rel="noopener">FANGSPEARE.COM</a>
+    <a class="btn ghost" href="../assets/specimen-02-poster.jpg" target="_blank" rel="noopener">FULL-SIZE FIELD POSTER</a>
+    <div class="small">Do not follow us south.</div>
+  </div>
+</section>
+
+<script src="Build/WebGL.loader.js?v=3"></script>
+<script>
+(() => {
+const $ = id => document.getElementById(id), WINDOW = 22;
+const QA = location.hash.startsWith('#autoplay-qa'), QARATE = parseInt(location.hash.split('-')[2]) || 0, REC = location.hash.startsWith('#record');
+const recTaps = [];
+let inst = null, qaTimer = 0, last = { t: 0, zones: 0 };
+window.digLog = [];
+
+window.digEvent = (kind, a, b, c) => {
+  window.digLog.push([kind, a, b, c]);
+  if (kind === 'ready') { $('go').disabled = false; $('go').textContent = 'BEGIN THE DIG'; $('load').textContent = 'Sound on. Music: OLD ONES by FANGSPEARE.'; }
+  if (kind === 'flares') { const f = $('flare'); if (a < 0) f.classList.remove('on'); else { f.classList.add('on'); f.querySelector('b').textContent = a; f.disabled = a <= 0; } }
+  if (kind === 'tap' && REC) { recTaps.push(+a.toFixed(3)); $('rectxt').value = JSON.stringify(recTaps); }
+  if (kind === 'win') { clearInterval(qaTimer); results(true, a, 5, b, c); }
+  if (kind === 'fail') { clearInterval(qaTimer); results(false, b, a, 0, 0); }
+};
+
+const dpr = Math.min(window.devicePixelRatio || 1, 2);
+createUnityInstance($('unity-canvas'), {
+  dataUrl: 'Build/WebGL.data.unityweb?v=3', frameworkUrl: 'Build/WebGL.framework.js.unityweb?v=3', codeUrl: 'Build/WebGL.wasm.unityweb?v=3',
+  streamingAssetsUrl: 'StreamingAssets', companyName: 'Darby', productName: 'The Dig', productVersion: '3.0', devicePixelRatio: dpr,
+}, p => { $('go').textContent = 'THAWING THE DIG SITE ' + Math.round(p * 100) + '%'; })
+.then(u => { inst = u; if (QA) { $('title').classList.remove('on'); if (QARATE) qaTimer = setInterval(() => inst.SendMessage('Dig', 'QATap'), QARATE); } }) // QA: Unity self-begins from Start
+.catch(e => { $('load').textContent = 'This phone could not start the dig. Try Safari or Chrome.'; console.error(e); });
+
+function begin() {
+  if (!inst) return;
+  $('title').classList.remove('on'); $('result').classList.remove('on');
+  inst.SendMessage('Dig', 'Begin', '');
+}
+$('go').onclick = begin;
+$('flare').onclick = e => { e.preventDefault(); if (inst) inst.SendMessage('Dig', 'Flare', ''); };
+if (REC) { $('rec').classList.add('on'); $('reccopy').onclick = () => navigator.clipboard && navigator.clipboard.writeText($('rectxt').value); }
+$('again').onclick = begin;
+
+function multFor(t) { return t < 11 ? [2, 'LEGENDARY'] : t < 14 ? [1.5, 'SWIFT'] : t < 18 ? [1.2, 'STEADY'] : [1, 'NARROW ESCAPE']; }
+function results(won, t, zones, beat, taps) {
+  $('result').classList.add('on');
+  if (!won) {
+    $('rtitle').textContent = 'THE SHOGGOTH TOOK THE DIG';
+    $('rtime').textContent = '--'; $('rzones').textContent = zones + '/5'; $('rbeat').textContent = '--'; $('rscore').textContent = '--';
+    $('rmult').textContent = 'So close. Dig again?'; $('cardimg').style.display = 'none'; $('save').style.display = 'none'; $('cardnote').style.display = 'none';
+    return;
+  }
+  const [m, label] = multFor(t), score = Math.round((1000 + beat * 20 + Math.max(0, WINDOW - t) * 40) * m);
+  $('rtitle').textContent = 'SPECIMEN 02 RECOVERED';
+  $('rtime').textContent = t.toFixed(1) + 's'; $('rzones').textContent = '5/5'; $('rbeat').textContent = beat; $('rscore').textContent = score.toLocaleString();
+  $('rmult').textContent = `SPEED BONUS x${m} · ${label}`;
+  $('cardimg').style.display = ''; $('save').style.display = ''; $('cardnote').style.display = '';
+  makeCard(score, t, label);
+}
+function makeCard(score, t, label) {
+  const img = new Image(); img.src = '../assets/plate.jpg';
+  img.onload = () => {
+    const W = 1080, H = 1620, c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+    x.fillStyle = '#e9dcbf'; x.fillRect(0, 0, W, H);
+    x.drawImage(img, 120, 190, 840, 1260);
+    x.strokeStyle = '#3a2f22'; x.lineWidth = 3; x.strokeRect(60, 60, W - 120, H - 120);
+    x.fillStyle = '#1a1410'; x.textAlign = 'center';
+    x.font = '700 46px Oswald, sans-serif'; x.fillText('FANGSPEARE EXPEDITION', W / 2, 128);
+    x.font = '26px "Special Elite", monospace'; x.fillText('EXCAVATION 02 · SPECIMEN: OLD ONE', W / 2, 166);
+    const agent = ($('agent').value || 'FIELD AGENT').toUpperCase().replace(/[^A-Z0-9 .'-]/g, '').slice(0, 16) || 'FIELD AGENT';
+    const no = String((score * 7919 + Math.round(t * 1000)) % 10000).padStart(4, '0');
+    x.font = '30px "Special Elite", monospace'; x.fillText(`FREED BY ${agent} · No. ${no}`, W / 2, 1486);
+    x.font = '24px "Special Elite", monospace'; x.fillText(`5 ZONES IN ${t.toFixed(1)}s · ${label} · SCORE ${score.toLocaleString()}`, W / 2, 1520);
+    x.fillStyle = '#8f1d1d'; x.font = '22px "Special Elite", monospace'; x.fillText('OLD ONES BY FANGSPEARE · OUT 12/2 · DO NOT FOLLOW US SOUTH', W / 2, 1548);
+    x.save(); x.translate(860, 300); x.rotate(-0.2); x.strokeStyle = '#a3171799'; x.lineWidth = 5; x.strokeRect(-110, -36, 220, 72);
+    x.fillStyle = '#a31717bb'; x.font = '700 34px Oswald'; x.fillText('RECOVERED', 0, 12); x.restore();
+    const url = c.toDataURL('image/jpeg', 0.9); $('cardimg').src = url;
+    $('save').onclick = () => { const l = document.createElement('a'); l.href = url; l.download = `FANGSPEARE-Specimen-02-No${no}.jpg`; document.body.appendChild(l); l.click(); l.remove(); };
+  };
+}
+})();
+</script>
+</body>
+</html>
