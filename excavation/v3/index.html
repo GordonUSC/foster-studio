@@ -87,7 +87,7 @@ html,body{height:100%;background:#000;color:var(--bone);font-family:'Special Eli
   </div>
 </section>
 
-<script src="Build/WebGL.loader.js?v=3"></script>
+<script src="Build/WebGL.loader.js?v=4"></script>
 <script>
 (() => {
 const $ = id => document.getElementById(id), WINDOW = 22;
@@ -107,7 +107,7 @@ window.digEvent = (kind, a, b, c) => {
 
 const dpr = Math.min(window.devicePixelRatio || 1, 2);
 createUnityInstance($('unity-canvas'), {
-  dataUrl: 'Build/WebGL.data.unityweb?v=3', frameworkUrl: 'Build/WebGL.framework.js.unityweb?v=3', codeUrl: 'Build/WebGL.wasm.unityweb?v=3',
+  dataUrl: 'Build/WebGL.data.unityweb?v=4', frameworkUrl: 'Build/WebGL.framework.js.unityweb?v=4', codeUrl: 'Build/WebGL.wasm.unityweb?v=4',
   streamingAssetsUrl: 'StreamingAssets', companyName: 'Darby', productName: 'The Dig', productVersion: '3.0', devicePixelRatio: dpr,
 }, p => { $('go').textContent = 'THAWING THE DIG SITE ' + Math.round(p * 100) + '%'; })
 .then(u => { inst = u; if (QA) { $('title').classList.remove('on'); if (QARATE) qaTimer = setInterval(() => inst.SendMessage('Dig', 'QATap'), QARATE); } }) // QA: Unity self-begins from Start
